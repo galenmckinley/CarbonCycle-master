@@ -1,0 +1,1718 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  The main application file for the UW CarbonCycle application.
+  Loads the historical data and creates the main view.
+-->
+
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:cmp="cc.*"
+    minHeight="500"
+    width="100%" height="100%"
+    backgroundSize="100%"
+    backgroundColor="#ffffff"
+    paddingLeft="4" paddingRight="4" paddingBottom="4" paddingTop="4" initialize="initTimers();"
+	>
+
+  <!-- A manually updated version info string, hover over copyright to see -->
+  <mx:String id="version">Version 2.2, compiled 22 Jan 2018</mx:String>
+
+  <!-- load our XML data file into a data model -->
+  <mx:Model id="results" source="../assets/CCData.xml"/>
+
+  <!-- used to insure image sizing not repeated after initialization -->
+  <mx:Boolean id="appInitialized">false</mx:Boolean>
+
+  <!-- initialize the IPCC fan data object -->
+  <cmp:IPCCFanData id="ipccfandata"></cmp:IPCCFanData>
+
+  <!-- default trending on reset, or flat trending -->
+  <mx:Boolean id="defaultTrending">true</mx:Boolean>
+
+  <!-- line stroke object for various line states (active, editable, etc.) -->
+  <mx:Stroke id="activeuneditable" color="0xE47801" weight="2" alpha="1"></mx:Stroke>
+  <mx:Stroke id="inactiveuneditable" color="0xE47801" weight="2" alpha=".35"></mx:Stroke>
+  <mx:Stroke id="activeeditable" color="0xA5BC4E" weight="2" alpha="1"></mx:Stroke>
+  <mx:Stroke id="inactiveeditable" color="0xA5BC4E" weight="2" alpha=".35"></mx:Stroke>
+
+  <!-- min, max, labels for vertical temperature axes -->
+  <mx:Number id="dfmin">-0.894</mx:Number>
+  <mx:Number id="dfmax">10.684</mx:Number>
+  <mx:Number id="dcmin">-0.4966</mx:Number>
+  <mx:Number id="dcmax">5.9355</mx:Number>
+  <mx:String id="dftitle">Global Temperature Change (&#0176;F)</mx:String>
+  <mx:String id="dctitle">Global Temperature Change (&#0176;C)</mx:String>
+
+  <!-- min and max sources and sinks in PgC for graphics rescaling -->
+
+  <!-- fossil fuels -->
+  <mx:Number id="ffMin">0</mx:Number>
+  <mx:Number id="ffMax">25</mx:Number>
+  <mx:Number id="ffInit">8.21</mx:Number>
+
+  <!-- land use -->
+  <mx:Number id="luMin">0</mx:Number>
+  <mx:Number id="luMax">2.0</mx:Number>
+  <mx:Number id="luInit">1.5</mx:Number>
+
+  <!-- ocean uptake -->
+  <mx:Number id="ouMin">0</mx:Number>
+  <mx:Number id="ouMax">-10</mx:Number>
+  <mx:Number id="ouInit">-2.36</mx:Number>
+
+  <!-- terrestrial uptake -->
+  <mx:Number id="tuMin">0</mx:Number>
+  <mx:Number id="tuMax">-10</mx:Number>
+  <mx:Number id="tuInit">-2.84</mx:Number>
+
+  <!-- holds anchor point and original size for each dynamic component -->
+
+  <!-- 1st of eight tree groups -->
+  <mx:Number id="trees1OrigHeight"></mx:Number>
+  <mx:Number id="trees1OrigWidth"></mx:Number>
+  <mx:Number id="trees1AnchorX"></mx:Number>
+  <mx:Number id="trees1AnchorY"></mx:Number>
+  <mx:Number id="trees1XOffset">.50</mx:Number>
+  <mx:Number id="trees1OriginX">308</mx:Number>
+  <mx:Number id="trees1OriginY">105</mx:Number>
+
+  <!-- 2nd of eight tree groups -->
+  <mx:Number id="trees2OrigHeight"></mx:Number>
+  <mx:Number id="trees2OrigWidth"></mx:Number>
+  <mx:Number id="trees2AnchorX"></mx:Number>
+  <mx:Number id="trees2AnchorY"></mx:Number>
+  <mx:Number id="trees2XOffset">.50</mx:Number>
+  <mx:Number id="trees2OriginX">310</mx:Number>
+  <mx:Number id="trees2OriginY">119</mx:Number>
+
+  <!-- 4th of eight tree groups -->
+  <mx:Number id="trees4OrigHeight"></mx:Number>
+  <mx:Number id="trees4OrigWidth"></mx:Number>
+  <mx:Number id="trees4AnchorX"></mx:Number>
+  <mx:Number id="trees4AnchorY"></mx:Number>
+  <mx:Number id="trees4XOffset">.50</mx:Number>
+  <mx:Number id="trees4OriginX">376</mx:Number>
+  <mx:Number id="trees4OriginY">104</mx:Number>
+
+  <!-- 5th of eight tree groups -->
+  <mx:Number id="trees5OrigHeight"></mx:Number>
+  <mx:Number id="trees5OrigWidth"></mx:Number>
+  <mx:Number id="trees5AnchorX"></mx:Number>
+  <mx:Number id="trees5AnchorY"></mx:Number>
+  <mx:Number id="trees5XOffset">.50</mx:Number>
+  <mx:Number id="trees5OriginX">386</mx:Number>
+  <mx:Number id="trees5OriginY">133</mx:Number>
+
+  <!-- 6th of eight tree groups -->
+  <mx:Number id="trees6OrigHeight"></mx:Number>
+  <mx:Number id="trees6OrigWidth"></mx:Number>
+  <mx:Number id="trees6AnchorX"></mx:Number>
+  <mx:Number id="trees6AnchorY"></mx:Number>
+  <mx:Number id="trees6XOffset">.50</mx:Number>
+  <mx:Number id="trees6OriginX">396</mx:Number>
+  <mx:Number id="trees6OriginY">131</mx:Number>
+
+  <!-- 7th of eight tree groups -->
+  <mx:Number id="trees7OrigHeight"></mx:Number>
+  <mx:Number id="trees7OrigWidth"></mx:Number>
+  <mx:Number id="trees7AnchorX"></mx:Number>
+  <mx:Number id="trees7AnchorY"></mx:Number>
+  <mx:Number id="trees7XOffset">.50</mx:Number>
+  <mx:Number id="trees7OriginX">418</mx:Number>
+  <mx:Number id="trees7OriginY">124</mx:Number>
+
+  <!-- 8th of eight tree groups -->
+  <mx:Number id="trees8OrigHeight"></mx:Number>
+  <mx:Number id="trees8OrigWidth"></mx:Number>
+  <mx:Number id="trees8AnchorX"></mx:Number>
+  <mx:Number id="trees8AnchorY"></mx:Number>
+  <mx:Number id="trees8XOffset">.50</mx:Number>
+  <mx:Number id="trees8OriginX">432</mx:Number>
+  <mx:Number id="trees8OriginY">130</mx:Number>
+
+  <!-- 2nd of four special "disappearing" tree groups (tied to land use) -->
+  <mx:Number id="trees10OrigHeight"></mx:Number>
+  <mx:Number id="trees10OrigWidth"></mx:Number>
+  <mx:Number id="trees10AnchorX"></mx:Number>
+  <mx:Number id="trees10AnchorY"></mx:Number>
+  <mx:Number id="trees10XOffset">.50</mx:Number>
+  <mx:Number id="trees10OriginX">630</mx:Number>
+  <mx:Number id="trees10OriginY">145</mx:Number>
+
+  <!-- 3rd of four special "disappearing" tree groups (tied to land use) -->
+  <mx:Number id="trees11OrigHeight"></mx:Number>
+  <mx:Number id="trees11OrigWidth"></mx:Number>
+  <mx:Number id="trees11AnchorX"></mx:Number>
+  <mx:Number id="trees11AnchorY"></mx:Number>
+  <mx:Number id="trees11XOffset">.50</mx:Number>
+  <mx:Number id="trees11OriginX">650</mx:Number>
+  <mx:Number id="trees11OriginY">151</mx:Number>
+
+  <!-- 4th of four special "disappearing" tree groups (tied to land use) -->
+  <mx:Number id="trees12OrigHeight"></mx:Number>
+  <mx:Number id="trees12OrigWidth"></mx:Number>
+  <mx:Number id="trees12AnchorX"></mx:Number>
+  <mx:Number id="trees12AnchorY"></mx:Number>
+  <mx:Number id="trees12XOffset">.50</mx:Number>
+  <mx:Number id="trees12OriginX">657</mx:Number>
+  <mx:Number id="trees12OriginY">145</mx:Number>
+
+  <!-- 1st of four smoke plumes -->
+  <mx:Number id="smoke1OrigHeight"></mx:Number>
+  <mx:Number id="smoke1OrigWidth"></mx:Number>
+  <mx:Number id="smoke1AnchorX"></mx:Number>
+  <mx:Number id="smoke1AnchorY"></mx:Number>
+  <mx:Number id="smoke1XOffset">.75</mx:Number>
+  <mx:Number id="smoke1OriginX">97</mx:Number>
+  <mx:Number id="smoke1OriginY">63</mx:Number>
+
+  <!-- 2nd of four smoke plumes -->
+  <mx:Number id="smoke2OrigHeight"></mx:Number>
+  <mx:Number id="smoke2OrigWidth"></mx:Number>
+  <mx:Number id="smoke2AnchorX"></mx:Number>
+  <mx:Number id="smoke2AnchorY"></mx:Number>
+  <mx:Number id="smoke2XOffset">.75</mx:Number>
+  <mx:Number id="smoke2OriginX">122</mx:Number>
+  <mx:Number id="smoke2OriginY">64</mx:Number>
+
+  <!-- 3rd of four smoke plumes -->
+  <mx:Number id="smoke3OrigHeight"></mx:Number>
+  <mx:Number id="smoke3OrigWidth"></mx:Number>
+  <mx:Number id="smoke3AnchorX"></mx:Number>
+  <mx:Number id="smoke3AnchorY"></mx:Number>
+  <mx:Number id="smoke3XOffset">.85</mx:Number>
+  <mx:Number id="smoke3OriginX">162</mx:Number>
+  <mx:Number id="smoke3OriginY">68</mx:Number>
+
+  <!-- 4th of four smoke plumes -->
+  <mx:Number id="smoke4OrigHeight"></mx:Number>
+  <mx:Number id="smoke4OrigWidth"></mx:Number>
+  <mx:Number id="smoke4AnchorX"></mx:Number>
+  <mx:Number id="smoke4AnchorY"></mx:Number>
+  <mx:Number id="smoke4XOffset">.85</mx:Number>
+  <mx:Number id="smoke4OriginX">179</mx:Number>
+  <mx:Number id="smoke4OriginY">66</mx:Number>
+
+  <!-- 1st of three arrows -->
+  <mx:Number id="arrow1OrigHeight"></mx:Number>
+  <mx:Number id="arrow1OrigWidth"></mx:Number>
+  <mx:Number id="arrow1AnchorX"></mx:Number>
+  <mx:Number id="arrow1AnchorY"></mx:Number>
+  <mx:Number id="arrow1XOffset">.5</mx:Number>
+  <mx:Number id="arrow1OriginX">525</mx:Number>
+  <mx:Number id="arrow1OriginY">230</mx:Number>
+
+  <!-- 2nd of three arrows -->
+  <mx:Number id="arrow2OrigHeight"></mx:Number>
+  <mx:Number id="arrow2OrigWidth"></mx:Number>
+  <mx:Number id="arrow2AnchorX"></mx:Number>
+  <mx:Number id="arrow2AnchorY"></mx:Number>
+  <mx:Number id="arrow2XOffset">.5</mx:Number>
+  <mx:Number id="arrow2OriginX">610</mx:Number>
+  <mx:Number id="arrow2OriginY">230</mx:Number>
+
+  <!-- 3rd of three arrows -->
+  <mx:Number id="arrow3OrigHeight"></mx:Number>
+  <mx:Number id="arrow3OrigWidth"></mx:Number>
+  <mx:Number id="arrow3AnchorX"></mx:Number>
+  <mx:Number id="arrow3AnchorY"></mx:Number>
+  <mx:Number id="arrow3XOffset">.5</mx:Number>
+  <mx:Number id="arrow3OriginX">700</mx:Number>
+  <mx:Number id="arrow3OriginY">230</mx:Number>
+
+  <!-- 1st of three fires -->
+  <mx:Number id="fire1OrigHeight"></mx:Number>
+  <mx:Number id="fire1OrigWidth"></mx:Number>
+  <mx:Number id="fire1AnchorX"></mx:Number>
+  <mx:Number id="fire1AnchorY"></mx:Number>
+  <mx:Number id="fire1XOffset">.5</mx:Number>
+  <mx:Number id="fire1OriginX">615</mx:Number>
+  <mx:Number id="fire1OriginY">140</mx:Number>
+
+  <!-- 2nd of three fires -->
+  <mx:Number id="fire2OrigHeight"></mx:Number>
+  <mx:Number id="fire2OrigWidth"></mx:Number>
+  <mx:Number id="fire2AnchorX"></mx:Number>
+  <mx:Number id="fire2AnchorY"></mx:Number>
+  <mx:Number id="fire2XOffset">.5</mx:Number>
+  <mx:Number id="fire2OriginX">665</mx:Number>
+  <mx:Number id="fire2OriginY">137</mx:Number>
+
+  <!-- 3rd of three fires -->
+  <mx:Number id="fire3OrigHeight"></mx:Number>
+  <mx:Number id="fire3OrigWidth"></mx:Number>
+  <mx:Number id="fire3AnchorX"></mx:Number>
+  <mx:Number id="fire3AnchorY"></mx:Number>
+  <mx:Number id="fire3XOffset">.5</mx:Number>
+  <mx:Number id="fire3OriginX">675</mx:Number>
+  <mx:Number id="fire3OriginY">140</mx:Number>
+
+  <!-- main display is an HBox with side-by-side panels -->
+  <mx:HBox horizontalAlign="center">
+
+  <!-- the five control buttons and what each does -->
+  <mx:Script><![CDATA[
+
+    import flash.net.FileReference;
+	import mx.controls.VScrollBar;
+	import mx.formatters.NumberFormatter;
+	import mx.graphics.SolidColor;
+	import mx.logging.*;
+    import mx.logging.targets.*;
+    import mx.charts.renderers.DiamondItemRenderer;
+
+        private function initLogging():void {
+            // Create a target.
+            var logTarget:TraceTarget = new TraceTarget();
+
+            // Log all messages 
+            logTarget.filters=["*"];
+
+            // Change this to change logging level.
+            logTarget.level = LogEventLevel.ERROR;
+
+            // Add date, time, category, and log level to the output.
+            logTarget.includeDate = true;
+            logTarget.includeTime = true;
+            logTarget.includeCategory = true;
+            logTarget.includeLevel = true;
+
+            // Begin logging.
+            Log.addTarget(logTarget);
+        }
+
+     public function changeToFF():void {
+        newChart.setSeriesIndex(0);
+		b1.selected = true;
+		b2.selected = false;
+		b3.selected = false;
+		b4.selected = false;
+
+		// highlight applicable graphic
+		dbff.alpha = 1;
+		dblu.alpha = 0;
+		dbou.alpha = 0;
+		dbtu.alpha = 0;
+
+		// need to set the fill color so consistent for Diamond Renderers
+    	var c:SolidColor = new SolidColor(0xFFFFFF);		
+    	newChart.series[4].setStyle("fill", c);
+
+        newChart.series[0].setStyle("lineStroke", activeuneditable);
+        newChart.series[1].setStyle("lineStroke", inactiveuneditable);
+        newChart.series[2].setStyle("lineStroke", inactiveuneditable);
+        newChart.series[3].setStyle("lineStroke", inactiveuneditable);
+        newChart.series[4].setStyle("lineStroke", activeeditable);
+        newChart.series[5].setStyle("lineStroke", inactiveeditable);
+        newChart.series[6].setStyle("lineStroke", inactiveeditable);
+        newChart.series[7].setStyle("lineStroke", inactiveeditable);
+        newChart.series[4].setStyle("stroke", activeeditable);
+        newChart.series[5].setStyle("stroke", inactiveeditable);
+        newChart.series[6].setStyle("stroke", inactiveeditable);
+        newChart.series[7].setStyle("stroke", inactiveeditable);
+        newChart.series[4].setStyle("itemRenderer", new ClassFactory(mx.charts.renderers.DiamondItemRenderer));
+        newChart.series[5].clearStyle("itemRenderer");
+        newChart.series[6].clearStyle("itemRenderer");
+        newChart.series[7].clearStyle("itemRenderer");
+		// change the IPCC fan visibility
+		ffas.visible = true;
+		luas.visible = false;
+		ouas.visible = false;
+		tuas.visible = false;
+     }
+
+     public function changeToLU():void {
+        newChart.setSeriesIndex(1);
+		b1.selected = false;
+		b2.selected = true;
+		b3.selected = false;
+		b4.selected = false;
+
+		// highlight applicable graphic
+		dbff.alpha = 0;
+		dblu.alpha = 1;
+		dbou.alpha = 0;
+		dbtu.alpha = 0;
+
+		// need to set the fill color so consistent for Diamond Renderers
+    	var c:SolidColor = new SolidColor(0xFFFFFF);		
+    	newChart.series[5].setStyle("fill", c);
+
+        newChart.series[0].setStyle("lineStroke", inactiveuneditable);
+        newChart.series[1].setStyle("lineStroke", activeuneditable);
+        newChart.series[2].setStyle("lineStroke", inactiveuneditable);
+        newChart.series[3].setStyle("lineStroke", inactiveuneditable);
+        newChart.series[4].setStyle("lineStroke", inactiveeditable);
+        newChart.series[5].setStyle("lineStroke", activeeditable);
+        newChart.series[6].setStyle("lineStroke", inactiveeditable);
+        newChart.series[7].setStyle("lineStroke", inactiveeditable);
+        newChart.series[4].setStyle("stroke", inactiveeditable);
+        newChart.series[5].setStyle("stroke", activeeditable);
+        newChart.series[6].setStyle("stroke", inactiveeditable);
+        newChart.series[7].setStyle("stroke", inactiveeditable);
+        newChart.series[4].clearStyle("itemRenderer");
+        newChart.series[5].setStyle("itemRenderer", new ClassFactory(mx.charts.renderers.DiamondItemRenderer));
+        newChart.series[6].clearStyle("itemRenderer");
+        newChart.series[7].clearStyle("itemRenderer");
+		// change the IPCC fan visibility
+		ffas.visible = false;
+		luas.visible = true;
+		ouas.visible = false;
+		tuas.visible = false;
+     }
+
+     public function changeToOU():void {
+        newChart.setSeriesIndex(2);
+		b1.selected = false;
+		b2.selected = false;
+		b3.selected = true;
+		b4.selected = false;
+
+		// highlight applicable graphic
+		dbff.alpha = 0;
+		dblu.alpha = 0;
+		dbou.alpha = 1;
+		dbtu.alpha = 0;
+
+		// need to set the fill color so consistent for Diamond Renderers
+    	var c:SolidColor = new SolidColor(0xFFFFFF);		
+    	newChart.series[6].setStyle("fill", c);
+
+        newChart.series[0].setStyle("lineStroke", inactiveuneditable);
+        newChart.series[1].setStyle("lineStroke", inactiveuneditable);
+        newChart.series[2].setStyle("lineStroke", activeuneditable);
+        newChart.series[3].setStyle("lineStroke", inactiveuneditable);
+        newChart.series[4].setStyle("lineStroke", inactiveeditable);
+        newChart.series[5].setStyle("lineStroke", inactiveeditable);
+        newChart.series[6].setStyle("lineStroke", activeeditable);
+        newChart.series[7].setStyle("lineStroke", inactiveeditable);
+        newChart.series[4].setStyle("stroke", inactiveeditable);
+        newChart.series[5].setStyle("stroke", inactiveeditable);
+        newChart.series[6].setStyle("stroke", activeeditable);
+        newChart.series[7].setStyle("stroke", inactiveeditable);
+        newChart.series[4].clearStyle("itemRenderer");
+        newChart.series[5].clearStyle("itemRenderer");
+        newChart.series[6].setStyle("itemRenderer", new ClassFactory(mx.charts.renderers.DiamondItemRenderer));
+        newChart.series[7].clearStyle("itemRenderer");
+		// change the IPCC fan visibility
+		ffas.visible = false;
+		luas.visible = false;
+		ouas.visible = true;
+		tuas.visible = false;
+     }
+
+     public function changeToTU():void {
+        newChart.setSeriesIndex(3);
+		b1.selected = false;
+		b2.selected = false;
+		b3.selected = false;
+		b4.selected = true;
+
+		// highlight applicable graphic
+		dbff.alpha = 0;
+		dblu.alpha = 0;
+		dbou.alpha = 0;
+		dbtu.alpha = 1;
+
+		// need to set the fill color so consistent for Diamond Renderers
+    	var c:SolidColor = new SolidColor(0xFFFFFF);		
+    	newChart.series[7].setStyle("fill", c);
+
+        newChart.series[0].setStyle("lineStroke", inactiveuneditable);
+        newChart.series[1].setStyle("lineStroke", inactiveuneditable);
+        newChart.series[2].setStyle("lineStroke", inactiveuneditable);
+        newChart.series[3].setStyle("lineStroke", activeuneditable);
+        newChart.series[4].setStyle("lineStroke", inactiveeditable);
+        newChart.series[5].setStyle("lineStroke", inactiveeditable);
+        newChart.series[6].setStyle("lineStroke", inactiveeditable);
+        newChart.series[7].setStyle("lineStroke", activeeditable);
+        newChart.series[4].setStyle("stroke", inactiveeditable);
+        newChart.series[5].setStyle("stroke", inactiveeditable);
+        newChart.series[6].setStyle("stroke", inactiveeditable);
+        newChart.series[7].setStyle("stroke", activeeditable);
+        newChart.series[4].clearStyle("itemRenderer");
+        newChart.series[5].clearStyle("itemRenderer");
+        newChart.series[6].clearStyle("itemRenderer");
+        newChart.series[7].setStyle("itemRenderer", new ClassFactory(mx.charts.renderers.DiamondItemRenderer));
+		// change the IPCC fan visibility
+		ffas.visible = false;
+		luas.visible = false;
+		ouas.visible = false;
+		tuas.visible = true;
+     }
+
+	 public function reset(trendType:Boolean):void {
+		var logger:ILogger = Log.getLogger("mx.core.Application");
+		defaultTrending = trendType;
+        resetImagePanel();
+		myAC.removeAll();
+        co2AC.removeAll();
+        myInterpolatedAC.removeAll();
+		myTimer.reset();
+        co2Timer.reset();
+        prvPPM = 0;
+        curYear = 2017;
+        co2ArrayIndex = 0;
+		myTimer.start();
+        newChart.setSeriesIndex(0);
+		b1.selected = true;
+		b2.selected = false;
+		b3.selected = false;
+		b4.selected = false;
+	    b6.selected = false;
+		toggleAxes("on");
+        newChart.series[0].setStyle("lineStroke", activeuneditable);
+        newChart.series[1].setStyle("lineStroke", inactiveuneditable);
+        newChart.series[2].setStyle("lineStroke", inactiveuneditable);
+        newChart.series[3].setStyle("lineStroke", inactiveuneditable);
+        newChart.series[4].setStyle("lineStroke", activeeditable);
+        newChart.series[5].setStyle("lineStroke", inactiveeditable);
+        newChart.series[6].setStyle("lineStroke", inactiveeditable);
+        newChart.series[7].setStyle("lineStroke", inactiveeditable);
+        newChart.series[4].setStyle("stroke", activeeditable);
+        newChart.series[5].setStyle("stroke", inactiveeditable);
+        newChart.series[6].setStyle("stroke", inactiveeditable);
+        newChart.series[7].setStyle("stroke", inactiveeditable);
+        newChart.series[4].setStyle("itemRenderer", new ClassFactory(mx.charts.renderers.DiamondItemRenderer));
+        newChart.series[5].clearStyle("itemRenderer");
+        newChart.series[6].clearStyle("itemRenderer");
+        newChart.series[7].clearStyle("itemRenderer");
+		// change the IPCC fan visibility
+		ffas.visible = true;
+		luas.visible = false;
+		ouas.visible = false;
+		tuas.visible = false;
+		<!-- copy any projections to a "previous" or "old" projection array. keep this on-screen -->
+		if (pco2AC.length > 0) {
+			oldpco2AC.removeAll();
+			for (var acIdx:int = 1; acIdx < pco2AC.length; acIdx++) {			
+				var newObj:Object = pco2AC.getItemAt(acIdx);
+				oldpco2AC.addItem(newObj);
+			}
+		}
+		pco2AC.removeAll();
+		yearRightAC.removeAll();
+		yearLeftAC.removeAll();
+	 }
+
+     public function run():void {
+		// turn off any highlighted graphics
+		dbff.alpha = 0;
+		dblu.alpha = 0;
+		dbou.alpha = 0;
+		dbtu.alpha = 0;
+	    b6.selected = true;
+		toggleAxes("off");
+        co2ArrayIndex = 0;
+		<!-- copy any projections to a "previous" or "old" projection array. keep this on-screen -->
+		if (pco2AC.length > 0) {
+			oldpco2AC.removeAll();
+			for (var acIdx:int = 1; acIdx < pco2AC.length; acIdx++) {			
+				var newObj:Object = pco2AC.getItemAt(acIdx);
+				oldpco2AC.addItem(newObj);
+			}
+		}
+		pco2AC.removeAll();
+		yearRightAC.removeAll();
+		yearLeftAC.removeAll();
+        myInterpolatedAC.removeAll();
+        prvPPM = 0;
+        curYear = 2017;
+        co2Timer.reset();
+		co2Timer.start();
+     }
+
+	 public function saveForEdGCM():void {
+		// we need to format the CO2 values as F15.8 
+		var nf:NumberFormatter = new NumberFormatter();
+		nf.precision = 8;
+		nf.useThousandsSeparator = false;
+
+		var file:FileReference = new FileReference();
+		var saveOk:Boolean = false;
+		var outStr:String = "";
+		if (pco2AC.length == 0) {
+			outStr = "No data available - run a projection first";
+		} else {
+			// first, load the actual (Mauna Loa) numbers
+			for (var acIdx:int = 0; acIdx < co2AC.length; acIdx++) {
+				var newObj:Object = co2AC.getItemAt(acIdx);
+				// pad CO2 output string to 15 characters
+				var s:String = nf.format(newObj.aco2);
+				// and make sure decimal point falls at exactly column 12
+				var charCount:int = 12 - 4 - s.indexOf(".") - 1;
+				for (var idx:int = 0; idx < charCount; idx++) {
+					s = " " + s;
+				}
+				outStr = outStr + newObj.year + s + "\n";
+			}
+			for (var acIdx:int = 0; acIdx < pco2AC.length; acIdx++) {			
+				var newObj:Object = pco2AC.getItemAt(acIdx);
+				// pad CO2 output string to 15 characters
+				var s:String = nf.format(newObj.paco2);
+				// and make sure decimal point falls at exactly column 12
+				var charCount:int = 12 - 4 - s.indexOf(".") - 1;
+				for (var idx:int = 0; idx < charCount; idx++) {
+					s = " " + s;
+				}
+				outStr = outStr + newObj.year + s + "\n";
+			}
+			saveOk = true;
+		}
+		if (saveOk) {
+			// set a default file name, they can change it if they want
+			file.save(outStr, "CO2_EdGCM.txt");
+		} else {
+			var a:Alert = Alert.show(outStr);
+			a.width = 600;
+		}
+     }
+
+  public function resetImagePanel():void {
+     var logger:ILogger = Log.getLogger("mx.core.Application");
+     imagePanel.graphics.clear();
+     logger.debug("Initializing image panel graphics...");
+	 factory.move(imagePanel.x + 97, imagePanel.y + 68);
+     var ffPct:Number = Math.round((ffInit / (ffMax - ffMin)) * 100);
+     var luPct:Number = Math.round((luInit / (luMax - luMin)) * 100);
+	 var ouPct:Number = Math.round((ouInit / (ouMax - ouMin)) * 100);
+     var tuPct:Number = Math.round((tuInit / (tuMax - tuMin)) * 100);
+     <!-- offset terrestrial uptake by 25%, trees should range from big to small but never vanish -->
+     tuPct += 25;
+     //if (tuPct > 100) tuPct = 100;
+
+     logger.debug("Smoke 1 disk image height: " + smoke1.height + ", width: " + smoke1.width);
+     logger.debug("Is application initialized? : " + appInitialized);
+
+     // 1st smoke plume
+	 smoke1.height = Math.round(smoke1OrigHeight * (ffPct / 100));
+     smoke1.width = Math.round(smoke1OrigWidth * (ffPct / 100));
+     logger.debug("Smoke 1 initial height: " + smoke1.height + ", width: " + smoke1.width);
+     smoke1AnchorX = imagePanel.x + smoke1OriginX + (smoke1.width * smoke1XOffset);
+     smoke1AnchorY = imagePanel.y + smoke1OriginY + smoke1.height;
+	 smoke1.move(smoke1AnchorX - (smoke1.width * smoke1XOffset), smoke1AnchorY - smoke1.height);
+     logger.debug("Smoke 1 x: " + smoke1.x + ", y: " + smoke1.y);
+
+     // 2nd smoke plume
+	 smoke2.height = Math.round(smoke2OrigHeight * (ffPct / 100));
+     smoke2.width = Math.round(smoke2OrigWidth * (ffPct / 100));
+     logger.debug("Smoke 2 initial height: " + smoke2.height + ", width: " + smoke2.width);
+     smoke2AnchorX = imagePanel.x + smoke2OriginX + (smoke2.width * smoke2XOffset);
+     smoke2AnchorY = imagePanel.y + smoke2OriginY + smoke2.height;
+	 smoke2.move(smoke2AnchorX - (smoke2.width * smoke2XOffset), smoke2AnchorY - smoke2.height);
+
+     // 3rd smoke plume
+	 smoke3.height = Math.round(smoke3OrigHeight * (ffPct / 100));
+     smoke3.width = Math.round(smoke3OrigWidth * (ffPct / 100));
+     logger.debug("Smoke 2 initial height: " + smoke3.height + ", width: " + smoke3.width);
+     smoke3AnchorX = imagePanel.x + smoke3OriginX + (smoke3.width * smoke3XOffset);
+     smoke3AnchorY = imagePanel.y + smoke3OriginY + smoke3.height;
+	 smoke3.move(smoke3AnchorX - (smoke3.width * smoke3XOffset), smoke3AnchorY - smoke3.height);
+
+     // 4th smoke plume
+	 smoke4.height = Math.round(smoke4OrigHeight * (ffPct / 100));
+     smoke4.width = Math.round(smoke4OrigWidth * (ffPct / 100));
+     logger.debug("Smoke 2 initial height: " + smoke4.height + ", width: " + smoke4.width);
+     smoke4AnchorX = imagePanel.x + smoke4OriginX + (smoke4.width * smoke4XOffset);
+     smoke4AnchorY = imagePanel.y + smoke4OriginY + smoke4.height;
+	 smoke4.move(smoke4AnchorX - (smoke4.width * smoke4XOffset), smoke4AnchorY - smoke4.height);
+
+     // 1st arrow
+	 arrow1.height = Math.round(arrow1OrigHeight * (ouPct / 100));
+     arrow1.width = Math.round(arrow1OrigWidth * (ouPct / 100));
+     logger.debug("Arrow 1 initial height: " + arrow1.height + ", width: " + arrow1.width);
+     arrow1AnchorX = imagePanel.x + arrow1OriginX + (arrow1.width * arrow1XOffset);
+     arrow1AnchorY = imagePanel.y + arrow1OriginY + arrow1.height;
+	 arrow1.move(arrow1AnchorX - (arrow1.width * arrow1XOffset), arrow1AnchorY - arrow1.height);
+
+     // 2nd arrow
+	 arrow2.height = Math.round(arrow2OrigHeight * (ouPct / 100));
+     arrow2.width = Math.round(arrow2OrigWidth * (ouPct / 100));
+     logger.debug("Arrow 2 initial height: " + arrow2.height + ", width: " + arrow2.width);
+     arrow2AnchorX = imagePanel.x + arrow2OriginX + (arrow2.width * arrow2XOffset);
+     arrow2AnchorY = imagePanel.y + arrow2OriginY + arrow2.height;
+	 arrow2.move(arrow2AnchorX - (arrow2.width * arrow2XOffset), arrow2AnchorY - arrow2.height);
+
+     // 3rd arrow
+	 arrow3.height = Math.round(arrow3OrigHeight * (ouPct / 100));
+     arrow3.width = Math.round(arrow3OrigWidth * (ouPct / 100));
+     logger.debug("Arrow 3 initial height: " + arrow3.height + ", width: " + arrow3.width);
+     arrow3AnchorX = imagePanel.x + arrow3OriginX + (arrow3.width * arrow3XOffset);
+     arrow3AnchorY = imagePanel.y + arrow3OriginY + arrow3.height;
+	 arrow3.move(arrow3AnchorX - (arrow3.width * arrow3XOffset), arrow3AnchorY - arrow3.height);
+
+     // 1st fire
+	 fire1.height = Math.round(fire1OrigHeight * (luPct / 100));
+     fire1.width = Math.round(fire1OrigWidth * (luPct / 100));
+     logger.debug("Fire 1 initial height: " + fire1.height + ", width: " + fire1.width);
+     fire1AnchorX = imagePanel.x + fire1OriginX + (fire1.width * fire1XOffset);
+     fire1AnchorY = imagePanel.y + fire1OriginY + fire1.height;
+	 fire1.move(fire1AnchorX - (fire1.width * fire1XOffset), fire1AnchorY - fire1.height);
+
+     // 2nd fire
+	 fire2.height = Math.round(fire2OrigHeight * (luPct / 100));
+     fire2.width = Math.round(fire2OrigWidth * (luPct / 100));
+     logger.debug("Fire 2 initial height: " + fire2.height + ", width: " + fire2.width);
+     fire2AnchorX = imagePanel.x + fire2OriginX + (fire2.width * fire2XOffset);
+     fire2AnchorY = imagePanel.y + fire2OriginY + fire2.height;
+	 fire2.move(fire2AnchorX - (fire2.width * fire2XOffset), fire2AnchorY - fire2.height);
+
+     // 3rd fire
+	 fire3.height = Math.round(fire3OrigHeight * (luPct / 100));
+     fire3.width = Math.round(fire3OrigWidth * (luPct / 100));
+     logger.debug("Fire 3 initial height: " + fire3.height + ", width: " + fire3.width);
+     fire3AnchorX = imagePanel.x + fire3OriginX + (fire3.width * fire3XOffset);
+     fire3AnchorY = imagePanel.y + fire3OriginY + fire3.height;
+	 fire3.move(fire3AnchorX - (fire3.width * fire3XOffset), fire3AnchorY - fire3.height);
+
+     // 1st tree group
+	 trees1.height = Math.round(trees1OrigHeight * (tuPct / 100));
+     trees1.width = Math.round(trees1OrigWidth * (tuPct / 100));
+     logger.debug("Trees 1 initial height: " + trees1.height + ", width: " + trees1.width);
+     trees1AnchorX = imagePanel.x + trees1OriginX + (trees1.width * trees1XOffset);
+     trees1AnchorY = imagePanel.y + trees1OriginY + trees1.height;
+	 trees1.move(trees1AnchorX - (trees1.width * trees1XOffset), trees1AnchorY - trees1.height);
+
+     // 2nd tree group
+	 trees2.height = Math.round(trees2OrigHeight * (tuPct / 100));
+     trees2.width = Math.round(trees2OrigWidth * (tuPct / 100));
+     logger.debug("Trees 1 initial height: " + trees2.height + ", width: " + trees2.width);
+     trees2AnchorX = imagePanel.x + trees2OriginX + (trees2.width * trees2XOffset);
+     trees2AnchorY = imagePanel.y + trees2OriginY + trees2.height;
+	 trees2.move(trees2AnchorX - (trees2.width * trees2XOffset), trees2AnchorY - trees2.height);
+
+     // 4th tree group
+	 trees4.height = Math.round(trees4OrigHeight * (tuPct / 100));
+     trees4.width = Math.round(trees4OrigWidth * (tuPct / 100));
+     logger.debug("Trees 1 initial height: " + trees4.height + ", width: " + trees4.width);
+     trees4AnchorX = imagePanel.x + trees4OriginX + (trees4.width * trees4XOffset);
+     trees4AnchorY = imagePanel.y + trees4OriginY + trees4.height;
+	 trees4.move(trees4AnchorX - (trees4.width * trees4XOffset), trees4AnchorY - trees4.height);
+
+     // 5th tree group
+	 trees5.height = Math.round(trees5OrigHeight * (tuPct / 100));
+     trees5.width = Math.round(trees5OrigWidth * (tuPct / 100));
+     logger.debug("Trees 1 initial height: " + trees5.height + ", width: " + trees5.width);
+     trees5AnchorX = imagePanel.x + trees5OriginX + (trees5.width * trees5XOffset);
+     trees5AnchorY = imagePanel.y + trees5OriginY + trees5.height;
+	 trees5.move(trees5AnchorX - (trees5.width * trees5XOffset), trees5AnchorY - trees5.height);
+
+     // 6th tree group
+	 trees6.height = Math.round(trees6OrigHeight * (tuPct / 100));
+     trees6.width = Math.round(trees6OrigWidth * (tuPct / 100));
+     logger.debug("Trees 1 initial height: " + trees6.height + ", width: " + trees6.width);
+     trees6AnchorX = imagePanel.x + trees6OriginX + (trees6.width * trees6XOffset);
+     trees6AnchorY = imagePanel.y + trees6OriginY + trees6.height;
+	 trees6.move(trees6AnchorX - (trees6.width * trees6XOffset), trees6AnchorY - trees6.height);
+
+     // 7th tree group
+	 trees7.height = Math.round(trees7OrigHeight * (tuPct / 100));
+     trees7.width = Math.round(trees7OrigWidth * (tuPct / 100));
+     logger.debug("Trees 1 initial height: " + trees7.height + ", width: " + trees7.width);
+     trees7AnchorX = imagePanel.x + trees7OriginX + (trees7.width * trees7XOffset);
+     trees7AnchorY = imagePanel.y + trees7OriginY + trees7.height;
+	 trees7.move(trees7AnchorX - (trees7.width * trees7XOffset), trees7AnchorY - trees7.height);
+
+     // 8th tree group
+	 trees8.height = Math.round(trees8OrigHeight * (tuPct / 100));
+     trees8.width = Math.round(trees8OrigWidth * (tuPct / 100));
+     logger.debug("Trees 1 initial height: " + trees8.height + ", width: " + trees8.width);
+     trees8AnchorX = imagePanel.x + trees8OriginX + (trees8.width * trees8XOffset);
+     trees8AnchorY = imagePanel.y + trees8OriginY + trees8.height;
+	 trees8.move(trees8AnchorX - (trees8.width * trees8XOffset), trees8AnchorY - trees8.height);
+
+     // 2nd special disappearing tree group
+	 trees10.height = Math.round(trees10OrigHeight * (tuPct / 100));
+     trees10.width = Math.round(trees10OrigWidth * (tuPct / 100));
+     logger.debug("Trees 10 initial height: " + trees10.height + ", width: " + trees10.width);
+     trees10AnchorX = imagePanel.x + trees10OriginX + (trees10.width * trees10XOffset);
+     trees10AnchorY = imagePanel.y + trees10OriginY + trees10.height;
+	 trees10.move(trees10AnchorX - (trees10.width * trees10XOffset), trees10AnchorY - trees10.height);
+
+     // 3rd special disappearing tree group
+	 trees11.height = Math.round(trees11OrigHeight * (tuPct / 100));
+     trees11.width = Math.round(trees11OrigWidth * (tuPct / 100));
+     logger.debug("Trees 11 initial height: " + trees11.height + ", width: " + trees11.width);
+     trees11AnchorX = imagePanel.x + trees11OriginX + (trees11.width * trees11XOffset);
+     trees11AnchorY = imagePanel.y + trees11OriginY + trees11.height;
+	 trees11.move(trees11AnchorX - (trees11.width * trees11XOffset), trees11AnchorY - trees11.height);
+
+     // 4th special disappearing tree group
+	 trees12.height = Math.round(trees12OrigHeight * (tuPct / 100));
+     trees12.width = Math.round(trees12OrigWidth * (tuPct / 100));
+     logger.debug("Trees 12 initial height: " + trees12.height + ", width: " + trees12.width);
+     trees12AnchorX = imagePanel.x + trees12OriginX + (trees12.width * trees12XOffset);
+     trees12AnchorY = imagePanel.y + trees12OriginY + trees12.height;
+	 trees12.move(trees12AnchorX - (trees12.width * trees12XOffset), trees12AnchorY - trees12.height);
+  }
+
+  ]]></mx:Script>
+
+  <mx:Script><![CDATA[
+  import flash.utils.Timer;
+  import flash.events.TimerEvent;
+  import mx.collections.ArrayCollection;
+  import mx.controls.Alert;
+  import mx.events.ItemClickEvent;
+  import mx.managers.ToolTipManager;
+
+  private var log:ILogger;
+
+  [Bindable]
+  public var myAC:ArrayCollection = new ArrayCollection();
+  [Bindable]
+  public var co2AC:ArrayCollection = new ArrayCollection();
+  [Bindable]
+  public var pco2AC:ArrayCollection = new ArrayCollection();
+  [Bindable]
+  public var oldpco2AC:ArrayCollection = new ArrayCollection();
+  [Bindable]
+  public var yearLeftAC:ArrayCollection = new ArrayCollection();
+  [Bindable]
+  public var yearRightAC:ArrayCollection = new ArrayCollection();
+
+  // the myAC data, interpolated to each possible data point for smooth
+  // projection plotting...
+  public var myInterpolatedAC:ArrayCollection = new ArrayCollection();
+
+  public var myTimer:Timer = null;
+  public var co2Timer:Timer = null;
+  public var mATM:Number = 28.97;
+  public var massATM:Number = 5.1e21;
+  public var mwC:Number = 12;
+  // conversion factor, Peta-grams of carbon to parts-per-million 
+  public var convPgCtoPPM:Number = (1e15 / mwC) * (mATM / massATM) * 1e6;
+  public var prvPPM:Number = 0;
+  public var curPPM:Number = 0;
+  public var curYear:Number = 2017;
+  public var co2ArrayIndex:int = 0;
+
+  public function initTimers():void {
+
+     initLogging();
+ 	 ToolTipManager.showDelay = 100;
+
+     // The first parameter in the Timer constructor
+     // is the interval, in milliseconds.
+     // The second parameter is how many times to run (0 is
+     // infinity).
+
+     // the first timer only runs once - it does all run-time one-time initializations
+     myTimer = new Timer(100, 1);
+     // XXX TJJ
+     // we will want to fix the hardcoding here on number of iterations
+     // it is one for each future projection year (presently current year out to 2100)
+     co2Timer = new Timer(100, 84);
+
+     // Add the listener for the timer event.
+     myTimer.addEventListener("timer", timerHandler);
+     co2Timer.addEventListener("timer", co2TimerHandler);
+     myTimer.start();
+	 b1.selected = true;
+
+     }
+
+	public function makeVisible(event:MouseEvent):void
+	{
+		switch (event.currentTarget) {
+			case dbff :
+				if (dbff.getBounds(this).contains(event.stageX, event.stageY)) {
+					dbff.alpha = 1;
+				}
+				break;
+			case dblu :
+				if (dblu.getBounds(this).contains(event.stageX, event.stageY)) {
+					dblu.alpha = 1;
+				}
+				break;
+			case dbou :
+				if (dbou.getBounds(this).contains(event.stageX, event.stageY)) {
+					dbou.alpha = 1;
+				}
+				break;
+			case dbtu :
+				if (dbtu.getBounds(this).contains(event.stageX, event.stageY)) {
+					dbtu.alpha = 1;
+				}
+				break;
+			default :
+				trace("makeVisible, currentTarget is none of the four hot spots");
+				break;
+		}
+	}
+
+	public function makeInvisible(event:MouseEvent):void
+	{
+		switch (event.currentTarget) {
+			case dbff :
+				if (dbff.getBounds(this).contains(event.stageX, event.stageY)) {
+					dbff.alpha = 1;
+				} else {
+					dbff.alpha = 0;
+				}
+				break;
+			case dblu :
+				if (dblu.getBounds(this).contains(event.stageX, event.stageY)) {
+					dblu.alpha = 1;
+				} else {
+					dblu.alpha = 0;
+				}
+				break;
+			case dbou :
+				if (dbou.getBounds(this).contains(event.stageX, event.stageY)) {
+					dbou.alpha = 1;
+				} else {
+					dbou.alpha = 0;
+				}
+				break;
+			case dbtu :
+				if (dbtu.getBounds(this).contains(event.stageX, event.stageY)) {
+					dbtu.alpha = 1;
+				} else {
+					dbtu.alpha = 0;
+				}
+				break;
+			default :
+				trace("makeInvisible, currentTarget is none of the four hot spots");
+				break;
+		}
+	}
+
+	public function changeAxis(event:ItemClickEvent):void
+	{
+		if (event.currentTarget.selectedValue == "F") {		
+			tempaxisrightchart.minimum = dfmin;
+			tempaxisrightchart.maximum = dfmax;
+			// kinda hokey - check left axis title to see if we are in mid-run
+			if (leftaxisrightchart.title == " ") {
+				tempaxisrightchart.title = " ";
+			} else {
+				tempaxisrightchart.title = dftitle;
+			}
+		} else {
+			tempaxisrightchart.minimum = dcmin;
+			tempaxisrightchart.maximum = dcmax;
+			// kinda hokey - check left axis title to see if we are in mid-run
+			if (leftaxisrightchart.title == " ") {
+				tempaxisrightchart.title = " ";
+			} else {
+				tempaxisrightchart.title = dctitle;
+			}
+		}
+	}
+
+  public function initImagePanel():void {
+     var logger:ILogger = Log.getLogger("mx.core.Application");
+     imagePanel.graphics.clear();
+     logger.debug("Initializing image panel graphics...");
+	 factory.move(imagePanel.x + 97, imagePanel.y + 68);
+     // fossil fuels
+	 dbff.move(imagePanel.x + 73, imagePanel.y + 42);
+     // land use
+	 dblu.move(imagePanel.x + 575, imagePanel.y + 110);
+     // ocean uptake
+	 dbou.move(imagePanel.x + 507, imagePanel.y + 210);
+     // land uptake
+	 dbtu.move(imagePanel.x + 292, imagePanel.y + 87);
+	 // year and ppm counter
+	 yearcounter.setStyle("fontSize", 12);
+	 ppmcounter.setStyle("fontSize", 12);
+     yearcounter.move(imagePanel.x + 800, imagePanel.y + 10);
+	 ppmcounter.move(imagePanel.x + 800, imagePanel.y + 24);
+
+     var ffPct:Number = Math.round((ffInit / (ffMax - ffMin)) * 100);
+     var luPct:Number = Math.round((luInit / (luMax - luMin)) * 100);
+     var ouPct:Number = Math.round((ouInit / (ouMax - ouMin)) * 100);
+     var tuPct:Number = Math.round((tuInit / (tuMax - tuMin)) * 100);
+     <!-- offset terrestrial uptake by 25%, trees should range from big to small but never vanish -->
+     tuPct += 25;
+     //if (tuPct > 100) tuPct = 100;
+     logger.debug("Smoke 1 disk image height: " + smoke1.height + ", width: " + smoke1.width);
+     logger.debug("Is application initialized? : " + appInitialized);
+     if (! appInitialized) {
+        smoke1OrigHeight = smoke1.height;
+	    smoke1OrigWidth = smoke1.width;
+        smoke2OrigHeight = smoke2.height;
+	    smoke2OrigWidth = smoke2.width;
+        smoke3OrigHeight = smoke3.height;
+	    smoke3OrigWidth = smoke3.width;
+        smoke4OrigHeight = smoke4.height;
+	    smoke4OrigWidth = smoke4.width;
+        arrow1OrigHeight = arrow1.height;
+	    arrow1OrigWidth = arrow1.width;
+        arrow2OrigHeight = arrow2.height;
+	    arrow2OrigWidth = arrow2.width;
+        arrow3OrigHeight = arrow3.height;
+	    arrow3OrigWidth = arrow3.width;
+        fire1OrigHeight = fire1.height;
+	    fire1OrigWidth = fire1.width;
+        fire2OrigHeight = fire2.height;
+	    fire2OrigWidth = fire2.width;
+        fire3OrigHeight = fire3.height;
+	    fire3OrigWidth = fire3.width;
+        trees1OrigHeight = trees1.height;
+	    trees1OrigWidth = trees1.width;
+        trees2OrigHeight = trees2.height;
+	    trees2OrigWidth = trees2.width;
+        trees4OrigHeight = trees4.height;
+	    trees4OrigWidth = trees4.width;
+        trees5OrigHeight = trees5.height;
+	    trees5OrigWidth = trees5.width;
+        trees6OrigHeight = trees6.height;
+	    trees6OrigWidth = trees6.width;
+        trees7OrigHeight = trees7.height;
+	    trees7OrigWidth = trees7.width;
+        trees8OrigHeight = trees8.height;
+	    trees8OrigWidth = trees8.width;
+        trees10OrigHeight = trees10.height;
+	    trees10OrigWidth = trees10.width;
+        trees11OrigHeight = trees11.height;
+	    trees11OrigWidth = trees11.width;
+        trees12OrigHeight = trees12.height;
+	    trees12OrigWidth = trees12.width;
+     }
+
+	 smoke1.height = Math.round(smoke1.height * (ffPct / 100));
+     smoke1.width = Math.round(smoke1.width * (ffPct / 100));
+     logger.debug("Smoke 1 initial height: " + smoke1.height + ", width: " + smoke1.width);
+     smoke1AnchorX = imagePanel.x + smoke1OriginX + (smoke1.width * smoke1XOffset);
+     smoke1AnchorY = imagePanel.y + smoke1OriginY + smoke1.height;
+	 smoke1.move(smoke1AnchorX - (smoke1.width * smoke1XOffset), smoke1AnchorY - smoke1.height);
+     logger.debug("Smoke 1 x: " + smoke1.x + ", y: " + smoke1.y);
+
+	 smoke2.height = Math.round(smoke2.height * (ffPct / 100));
+     smoke2.width = Math.round(smoke2.width * (ffPct / 100));
+     logger.debug("Smoke 2 initial height: " + smoke2.height + ", width: " + smoke2.width);
+     smoke2AnchorX = imagePanel.x + smoke2OriginX + (smoke2.width * smoke2XOffset);
+     smoke2AnchorY = imagePanel.y + smoke2OriginY + smoke2.height;
+	 smoke2.move(smoke2AnchorX - (smoke2.width * smoke2XOffset), smoke2AnchorY - smoke2.height);
+
+	 smoke3.height = Math.round(smoke3.height * (ffPct / 100));
+     smoke3.width = Math.round(smoke3.width * (ffPct / 100));
+     logger.debug("Smoke 2 initial height: " + smoke3.height + ", width: " + smoke3.width);
+     smoke3AnchorX = imagePanel.x + smoke3OriginX + (smoke3.width * smoke3XOffset);
+     smoke3AnchorY = imagePanel.y + smoke3OriginY + smoke3.height;
+	 smoke3.move(smoke3AnchorX - (smoke3.width * smoke3XOffset), smoke3AnchorY - smoke3.height);
+
+	 smoke4.height = Math.round(smoke4.height * (ffPct / 100));
+     smoke4.width = Math.round(smoke4.width * (ffPct / 100));
+     logger.debug("Smoke 2 initial height: " + smoke4.height + ", width: " + smoke4.width);
+     smoke4AnchorX = imagePanel.x + smoke4OriginX + (smoke4.width * smoke4XOffset);
+     smoke4AnchorY = imagePanel.y + smoke4OriginY + smoke4.height;
+	 smoke4.move(smoke4AnchorX - (smoke4.width * smoke4XOffset), smoke4AnchorY - smoke4.height);
+
+	 arrow1.height = Math.round(arrow1.height * (ouPct / 100));
+     arrow1.width = Math.round(arrow1.width * (ouPct / 100));
+     logger.debug("Arrow 1 initial height: " + arrow1.height + ", width: " + arrow1.width);
+     arrow1AnchorX = imagePanel.x + arrow1OriginX + (arrow1.width * arrow1XOffset);
+     arrow1AnchorY = imagePanel.y + arrow1OriginY + arrow1.height;
+	 arrow1.move(arrow1AnchorX - (arrow1.width * arrow1XOffset), arrow1AnchorY - arrow1.height);
+
+	 arrow2.height = Math.round(arrow2.height * (ouPct / 100));
+     arrow2.width = Math.round(arrow2.width * (ouPct / 100));
+     logger.debug("Arrow 2 initial height: " + arrow2.height + ", width: " + arrow2.width);
+     arrow2AnchorX = imagePanel.x + arrow2OriginX + (arrow2.width * arrow2XOffset);
+     arrow2AnchorY = imagePanel.y + arrow2OriginY + arrow2.height;
+	 arrow2.move(arrow2AnchorX - (arrow2.width * arrow2XOffset), arrow2AnchorY - arrow2.height);
+
+	 arrow3.height = Math.round(arrow3.height * (ouPct / 100));
+     arrow3.width = Math.round(arrow3.width * (ouPct / 100));
+     logger.debug("Arrow 3 initial height: " + arrow3.height + ", width: " + arrow3.width);
+     arrow3AnchorX = imagePanel.x + arrow3OriginX + (arrow3.width * arrow3XOffset);
+     arrow3AnchorY = imagePanel.y + arrow3OriginY + arrow3.height;
+	 arrow3.move(arrow3AnchorX - (arrow3.width * arrow3XOffset), arrow3AnchorY - arrow3.height);
+
+	 fire1.height = Math.round(fire1.height * (luPct / 100));
+     fire1.width = Math.round(fire1.width * (luPct / 100));
+     logger.debug("Fire 1 initial height: " + fire1.height + ", width: " + fire1.width);
+     fire1AnchorX = imagePanel.x + fire1OriginX + (fire1.width * fire1XOffset);
+     fire1AnchorY = imagePanel.y + fire1OriginY + fire1.height;
+	 fire1.move(fire1AnchorX - (fire1.width * fire1XOffset), fire1AnchorY - fire1.height);
+
+	 fire2.height = Math.round(fire2.height * (luPct / 100));
+     fire2.width = Math.round(fire2.width * (luPct / 100));
+     logger.debug("Fire 2 initial height: " + fire2.height + ", width: " + fire2.width);
+     fire2AnchorX = imagePanel.x + fire2OriginX + (fire2.width * fire2XOffset);
+     fire2AnchorY = imagePanel.y + fire2OriginY + fire2.height;
+	 fire2.move(fire2AnchorX - (fire2.width * fire2XOffset), fire2AnchorY - fire2.height);
+
+	 fire3.height = Math.round(fire3.height * (luPct / 100));
+     fire3.width = Math.round(fire3.width * (luPct / 100));
+     logger.debug("Fire 3 initial height: " + fire3.height + ", width: " + fire3.width);
+     fire3AnchorX = imagePanel.x + fire3OriginX + (fire3.width * fire3XOffset);
+     fire3AnchorY = imagePanel.y + fire3OriginY + fire3.height;
+	 fire3.move(fire3AnchorX - (fire3.width * fire3XOffset), fire3AnchorY - fire3.height);
+
+	 trees1.height = Math.round(trees1.height * (tuPct / 100));
+     trees1.width = Math.round(trees1.width * (tuPct / 100));
+     logger.debug("Trees 1 initial height: " + trees1.height + ", width: " + trees1.width);
+     trees1AnchorX = imagePanel.x + trees1OriginX + (trees1.width * trees1XOffset);
+     trees1AnchorY = imagePanel.y + trees1OriginY + trees1.height;
+	 trees1.move(trees1AnchorX - (trees1.width * trees1XOffset), trees1AnchorY - trees1.height);
+
+	 trees2.height = Math.round(trees2.height * (tuPct / 100));
+     trees2.width = Math.round(trees2.width * (tuPct / 100));
+     logger.debug("Trees 1 initial height: " + trees2.height + ", width: " + trees2.width);
+     trees2AnchorX = imagePanel.x + trees2OriginX + (trees2.width * trees2XOffset);
+     trees2AnchorY = imagePanel.y + trees2OriginY + trees2.height;
+	 trees2.move(trees2AnchorX - (trees2.width * trees2XOffset), trees2AnchorY - trees2.height);
+
+	 trees4.height = Math.round(trees4.height * (tuPct / 100));
+     trees4.width = Math.round(trees4.width * (tuPct / 100));
+     logger.debug("Trees 1 initial height: " + trees4.height + ", width: " + trees4.width);
+     trees4AnchorX = imagePanel.x + trees4OriginX + (trees4.width * trees4XOffset);
+     trees4AnchorY = imagePanel.y + trees4OriginY + trees4.height;
+	 trees4.move(trees4AnchorX - (trees4.width * trees4XOffset), trees4AnchorY - trees4.height);
+
+	 trees5.height = Math.round(trees5.height * (tuPct / 100));
+     trees5.width = Math.round(trees5.width * (tuPct / 100));
+     logger.debug("Trees 1 initial height: " + trees5.height + ", width: " + trees5.width);
+     trees5AnchorX = imagePanel.x + trees5OriginX + (trees5.width * trees5XOffset);
+     trees5AnchorY = imagePanel.y + trees5OriginY + trees5.height;
+	 trees5.move(trees5AnchorX - (trees5.width * trees5XOffset), trees5AnchorY - trees5.height);
+
+	 trees6.height = Math.round(trees6.height * (tuPct / 100));
+     trees6.width = Math.round(trees6.width * (tuPct / 100));
+     logger.debug("Trees 1 initial height: " + trees6.height + ", width: " + trees6.width);
+     trees6AnchorX = imagePanel.x + trees6OriginX + (trees6.width * trees6XOffset);
+     trees6AnchorY = imagePanel.y + trees6OriginY + trees6.height;
+	 trees6.move(trees6AnchorX - (trees6.width * trees6XOffset), trees6AnchorY - trees6.height);
+
+	 trees7.height = Math.round(trees7.height * (tuPct / 100));
+     trees7.width = Math.round(trees7.width * (tuPct / 100));
+     logger.debug("Trees 1 initial height: " + trees7.height + ", width: " + trees7.width);
+     trees7AnchorX = imagePanel.x + trees7OriginX + (trees7.width * trees7XOffset);
+     trees7AnchorY = imagePanel.y + trees7OriginY + trees7.height;
+	 trees7.move(trees7AnchorX - (trees7.width * trees7XOffset), trees7AnchorY - trees7.height);
+
+	 trees8.height = Math.round(trees8.height * (tuPct / 100));
+     trees8.width = Math.round(trees8.width * (tuPct / 100));
+     logger.debug("Trees 1 initial height: " + trees8.height + ", width: " + trees8.width);
+     trees8AnchorX = imagePanel.x + trees8OriginX + (trees8.width * trees8XOffset);
+     trees8AnchorY = imagePanel.y + trees8OriginY + trees8.height;
+	 trees8.move(trees8AnchorX - (trees8.width * trees8XOffset), trees8AnchorY - trees8.height);
+
+	 trees10.height = Math.round(trees10.height * (tuPct / 100));
+     trees10.width = Math.round(trees10.width * (tuPct / 100));
+     logger.debug("Trees 1 initial height: " + trees10.height + ", width: " + trees10.width);
+     trees10AnchorX = imagePanel.x + trees10OriginX + (trees10.width * trees10XOffset);
+     trees10AnchorY = imagePanel.y + trees10OriginY + trees10.height;
+	 trees10.move(trees10AnchorX - (trees10.width * trees10XOffset), trees10AnchorY - trees10.height);
+
+	 trees11.height = Math.round(trees11.height * (tuPct / 100));
+     trees11.width = Math.round(trees11.width * (tuPct / 100));
+     logger.debug("Trees 1 initial height: " + trees11.height + ", width: " + trees11.width);
+     trees11AnchorX = imagePanel.x + trees11OriginX + (trees11.width * trees11XOffset);
+     trees11AnchorY = imagePanel.y + trees11OriginY + trees11.height;
+	 trees11.move(trees11AnchorX - (trees11.width * trees11XOffset), trees11AnchorY - trees11.height);
+
+	 trees12.height = Math.round(trees12.height * (tuPct / 100));
+     trees12.width = Math.round(trees12.width * (tuPct / 100));
+     logger.debug("Trees 1 initial height: " + trees12.height + ", width: " + trees12.width);
+     trees12AnchorX = imagePanel.x + trees12OriginX + (trees12.width * trees12XOffset);
+     trees12AnchorY = imagePanel.y + trees12OriginY + trees12.height;
+	 trees12.move(trees12AnchorX - (trees12.width * trees12XOffset), trees12AnchorY - trees12.height);
+
+     appInitialized = true;
+  }
+
+  public function updateImagePanel(fossilfuel:Number, landuse:Number, oceanuptake:Number, terrestrialuptake:Number):void {
+     var logger:ILogger = Log.getLogger("mx.core.Application");
+     imagePanel.graphics.clear();
+
+     <!-- clip to acceptable boundary value for graphics representation -->
+     if (fossilfuel < 0) fossilfuel = 0;
+     if (landuse < 0) landuse = 0;
+     if (landuse > luMax) landuse = luMax;
+     if (oceanuptake > 0) oceanuptake = 0;
+     if (terrestrialuptake > 0) terrestrialuptake = 0;
+	 var ffPct:Number = Math.round((fossilfuel / (ffMax - ffMin)) * 100);
+	 var luPct:Number = Math.round((landuse / (luMax - luMin)) * 100);
+     var ouPct:Number = Math.round((oceanuptake / (ouMax - ouMin)) * 100);
+	 var tuPct:Number = Math.round((terrestrialuptake / (tuMax - tuMin)) * 100);
+     <!-- offset terrestrial uptake by 25%, trees should range from big to small but never vanish -->
+     tuPct += 25;
+     //if (tuPct > 100) tuPct = 100;
+	 logger.debug("Updating image panel graphics... FF Percent: " + ffPct + ", LU%: " + luPct + ", Year: " + curYear);
+     logger.debug("Landuse: " + landuse);
+
+     <!-- handle present/not present graphics tied to land use -->
+     if (luPct > 40) {
+       trees10.setVisible(false);
+     } else {
+       trees10.setVisible(true);
+     }
+     if (luPct > 60) {
+       trees11.setVisible(false);
+     } else {
+       trees11.setVisible(true);
+     }
+     if (luPct > 80) {
+       trees12.setVisible(false);
+     } else {
+       trees12.setVisible(true);
+     }
+
+	 smoke1.height = Math.round(smoke1OrigHeight * (ffPct / 100));
+     smoke1.width = Math.round(smoke1OrigWidth * (ffPct / 100));
+     smoke1.move(smoke1AnchorX - (smoke1.width * smoke1XOffset), smoke1AnchorY - smoke1.height);
+
+	 smoke2.height = Math.round(smoke2OrigHeight * (ffPct / 100));
+     smoke2.width = Math.round(smoke2OrigWidth * (ffPct / 100));
+     smoke2.move(smoke2AnchorX - (smoke2.width * smoke2XOffset), smoke2AnchorY - smoke2.height);
+
+	 smoke3.height = Math.round(smoke3OrigHeight * (ffPct / 100));
+     smoke3.width = Math.round(smoke3OrigWidth * (ffPct / 100));
+     smoke3.move(smoke3AnchorX - (smoke3.width * smoke3XOffset), smoke3AnchorY - smoke3.height);
+
+	 smoke4.height = Math.round(smoke4OrigHeight * (ffPct / 100));
+     smoke4.width = Math.round(smoke4OrigWidth * (ffPct / 100));
+     smoke4.move(smoke4AnchorX - (smoke4.width * smoke4XOffset), smoke4AnchorY - smoke4.height);
+
+	 arrow1.height = Math.round(arrow1OrigHeight * (ouPct / 100));
+     arrow1.width = Math.round(arrow1OrigWidth * (ouPct / 100));
+     arrow1.move(arrow1AnchorX - (arrow1.width * arrow1XOffset), arrow1AnchorY - arrow1.height);
+
+	 arrow2.height = Math.round(arrow2OrigHeight * (ouPct / 100));
+     arrow2.width = Math.round(arrow2OrigWidth * (ouPct / 100));
+     arrow2.move(arrow2AnchorX - (arrow2.width * arrow2XOffset), arrow2AnchorY - arrow2.height);
+
+	 arrow3.height = Math.round(arrow3OrigHeight * (ouPct / 100));
+     arrow3.width = Math.round(arrow3OrigWidth * (ouPct / 100));
+     arrow3.move(arrow3AnchorX - (arrow3.width * arrow3XOffset), arrow3AnchorY - arrow3.height);
+
+	 fire1.height = Math.round(fire1OrigHeight * (luPct / 100));
+     fire1.width = Math.round(fire1OrigWidth * (luPct / 100));
+     fire1.move(fire1AnchorX - (fire1.width * fire1XOffset), fire1AnchorY - fire1.height);
+
+	 fire2.height = Math.round(fire2OrigHeight * (luPct / 100));
+     fire2.width = Math.round(fire2OrigWidth * (luPct / 100));
+     fire2.move(fire2AnchorX - (fire2.width * fire2XOffset), fire2AnchorY - fire2.height);
+
+	 fire3.height = Math.round(fire3OrigHeight * (luPct / 100));
+     fire3.width = Math.round(fire3OrigWidth * (luPct / 100));
+     fire3.move(fire3AnchorX - (fire3.width * fire3XOffset), fire3AnchorY - fire3.height);
+
+	 trees1.height = Math.round(trees1OrigHeight * (tuPct / 100));
+     trees1.width = Math.round(trees1OrigWidth * (tuPct / 100));
+     trees1.move(trees1AnchorX - (trees1.width * trees1XOffset), trees1AnchorY - trees1.height);
+
+	 trees2.height = Math.round(trees2OrigHeight * (tuPct / 100));
+     trees2.width = Math.round(trees2OrigWidth * (tuPct / 100));
+     trees2.move(trees2AnchorX - (trees2.width * trees2XOffset), trees2AnchorY - trees2.height);
+
+	 trees4.height = Math.round(trees4OrigHeight * (tuPct / 100));
+     trees4.width = Math.round(trees4OrigWidth * (tuPct / 100));
+     trees4.move(trees4AnchorX - (trees4.width * trees4XOffset), trees4AnchorY - trees4.height);
+
+	 trees5.height = Math.round(trees5OrigHeight * (tuPct / 100));
+     trees5.width = Math.round(trees5OrigWidth * (tuPct / 100));
+     trees5.move(trees5AnchorX - (trees5.width * trees5XOffset), trees5AnchorY - trees5.height);
+
+	 trees6.height = Math.round(trees6OrigHeight * (tuPct / 100));
+     trees6.width = Math.round(trees6OrigWidth * (tuPct / 100));
+     trees6.move(trees6AnchorX - (trees6.width * trees6XOffset), trees6AnchorY - trees6.height);
+
+	 trees7.height = Math.round(trees7OrigHeight * (tuPct / 100));
+     trees7.width = Math.round(trees7OrigWidth * (tuPct / 100));
+     trees7.move(trees7AnchorX - (trees7.width * trees7XOffset), trees7AnchorY - trees7.height);
+
+	 trees8.height = Math.round(trees8OrigHeight * (tuPct / 100));
+     trees8.width = Math.round(trees8OrigWidth * (tuPct / 100));
+     trees8.move(trees8AnchorX - (trees8.width * trees8XOffset), trees8AnchorY - trees8.height);
+
+	 trees10.height = Math.round(trees10OrigHeight * (tuPct / 100));
+     trees10.width = Math.round(trees10OrigWidth * (tuPct / 100));
+     trees10.move(trees10AnchorX - (trees10.width * trees10XOffset), trees10AnchorY - trees10.height);
+
+	 trees11.height = Math.round(trees11OrigHeight * (tuPct / 100));
+     trees11.width = Math.round(trees11OrigWidth * (tuPct / 100));
+     trees11.move(trees11AnchorX - (trees11.width * trees11XOffset), trees11AnchorY - trees11.height);
+
+	 trees12.height = Math.round(trees12OrigHeight * (tuPct / 100));
+     trees12.width = Math.round(trees12OrigWidth * (tuPct / 100));
+     trees12.move(trees12AnchorX - (trees12.width * trees12XOffset), trees12AnchorY - trees12.height);
+  }
+  
+  public function co2TimerHandler(event:TimerEvent):void {
+     
+     var logger:ILogger = Log.getLogger("mx.core.Application");
+     // 1st call? If so, initialize previous parts-per-million
+     if (prvPPM == 0) {
+	 	var o:Object = co2AC.getItemAt(co2AC.length - 1);
+        prvPPM = o.aco2;
+        // also initialize the interpolated data array
+        var loObj:Object = myAC.getItemAt(0);
+        var hiObj:Object = null;
+        for (var myACIndex:int = 1; myACIndex < myAC.length; myACIndex++) {
+           hiObj = myAC.getItemAt(myACIndex);
+           var dYear:Number = hiObj.year - loObj.year;
+           // delta for Fossil Fuels, Land Use, Ocean Uptake, Terrestrial Uptake
+           var dFF:Number = hiObj.fossilfuel - loObj.fossilfuel;
+           var dLU:Number = hiObj.landuse - loObj.landuse;
+           var dOU:Number = hiObj.oceanuptake - loObj.oceanuptake;
+           var dTU:Number = hiObj.terrestrialuptake - loObj.terrestrialuptake;
+           for (var i:Number = 0; i < dYear; i++) {
+              var newObj:Object = new Object();
+              newObj.year = loObj.year + i;
+              newObj.fossilfuel = loObj.fossilfuel + ((dFF / dYear) * i);
+              logger.debug("Setting FF levels for year " + newObj.year + " to: " + newObj.fossilfuel);
+              logger.debug("dLU: " + dLU + ", dYear: " + dYear + ", loObj.landuse: " + loObj.landuse);
+              newObj.landuse = loObj.landuse + ((dLU / dYear) * i);
+              logger.debug("Setting LU levels for year " + newObj.year + " to: " + newObj.landuse);
+              newObj.oceanuptake = loObj.oceanuptake + ((dOU / dYear) * i);
+              newObj.terrestrialuptake = loObj.terrestrialuptake + ((dTU / dYear) * i);
+              myInterpolatedAC.addItem(newObj);
+           }
+
+           // set up for next iteration
+           loObj = hiObj;
+        }
+        // load final data point info
+        var lastObj:Object = new Object();
+        lastObj.year = hiObj.year;
+        lastObj.fossilfuel = hiObj.fossilfuel;
+        lastObj.landuse = hiObj.landuse;
+        lastObj.oceanuptake = hiObj.oceanuptake;
+        lastObj.terrestrialuptake = hiObj.terrestrialuptake;
+        myInterpolatedAC.addItem(lastObj);
+    
+     }
+     // handles "live" updates to projected CO2 chart - once user hits Run button
+	 if (curYear <= 2100) {       
+        var io:Object = myInterpolatedAC.getItemAt(co2ArrayIndex);
+        curPPM = prvPPM + (
+          io.fossilfuel + io.landuse + io.oceanuptake + io.terrestrialuptake
+        ) * convPgCtoPPM;
+        var curObject:Object = new Object();
+        curObject.year = curYear;
+		curObject.paco2 = Math.round(curPPM * 100) / 100;
+		pco2AC.addItem(curObject);
+
+		// hokey series used to mark delta time
+		yearLeftAC.removeAll();
+		yearRightAC.removeAll();
+
+		var yLeftLoObject:Object = new Object();
+		yLeftLoObject.year = curYear;
+		// constraint to min
+		yLeftLoObject.carbon = -10;
+		yearLeftAC.addItem(yLeftLoObject);
+
+		var yLeftHiObject:Object = new Object();
+		yLeftHiObject.year = curYear;
+		// constrain to max
+		yLeftHiObject.carbon = 35;
+		yearLeftAC.addItem(yLeftHiObject);
+
+		var yRightLoObject:Object = new Object();
+		yRightLoObject.year = curYear;
+		// constraint to min
+		yRightLoObject.paco2 = 300 + 1;
+		yearRightAC.addItem(yRightLoObject);
+
+		var yRightHiObject:Object = new Object();
+		yRightHiObject.year = curYear;
+		// constrain to max
+		yRightHiObject.paco2 = 1200 - 1;
+		yearRightAC.addItem(yRightHiObject);
+
+        prvPPM = curPPM;
+		var ppmInt:int = int(curPPM);
+		yearcounter.htmlText = "<b>Year: " + curYear + "</font>";
+		ppmcounter.htmlText = "<b>" + ppmInt + " ppm</b>";
+        curYear++;
+        co2ArrayIndex++;
+        updateImagePanel(io.fossilfuel, io.landuse, io.oceanuptake, io.terrestrialuptake);
+     } else {
+		toggleAxes("on");
+	 	b6.selected = false;
+	 }
+
+  }
+
+	// since the axes were flickering during "runs", temporarily disable them
+	public function toggleAxes(onoff:String):void {
+		if (onoff == "on") {
+			// left chart
+			bottomaxisleftchart.title = "Year";
+			leftaxisleftchart.title = "PgC/yr";
+
+			leftaxisrightchart.title = "Atmospheric CO2 (ppm)";
+			bottomaxisrightchart.title = "Year";
+			if (degreesF.selected) {
+				tempaxisrightchart.title = dftitle;
+			} else {
+				tempaxisrightchart.title = dctitle;
+			}
+		} else {
+			// left chart
+			bottomaxisleftchart.title = " ";
+			leftaxisleftchart.title = " ";
+
+			// right chart
+			leftaxisrightchart.title = " ";
+			bottomaxisrightchart.title = " ";
+			tempaxisrightchart.title = " ";
+		}
+	}
+
+  public function timerHandler(event:TimerEvent):void {
+     
+     var begYear:int = 2017;
+     var maxYear:int = 2100;
+
+     // linear least squares constants for each curve
+	 
+	 // this set of numbers, not used at present, are a
+	 // least squares fit of all data 1959 to 2009 inlcusive
+	 
+     // var ffD:Number = 0.1102;
+	 // var luD:Number = -0.0073;
+	 // var ouD:Number = -0.02092;
+	 // var tuD:Number = -0.0295;
+
+	 // var ffE:Number = -213.2;
+	 // var luE:Number = 15.9;
+	 // var ouE:Number = 39.6;
+	 // var tuE:Number = 57; 
+	 
+	 // this set of numbers, currently in use, are defaults
+	 // provided by Galen McKinley that would result in 
+	 // approximately 800 ppm by year 2100
+	 
+	 var ffD:Number = 0.226;
+	 var luD:Number = -0.00747;
+	 var ouD:Number = -0.0451;
+	 var tuD:Number = -0.0171;
+	 
+	 var ffE:Number = -445.39;
+	 var luE:Number = 15.9;
+	 var ouE:Number = 88.1;
+	 var tuE:Number = 31.0;
+
+     var ml1959:Number = 315.98;
+     var mATM:Number = 28.97;
+     var massATM:Number = 5.1e21;
+     var mwC:Number = 12;
+     var convPgCtoPPM:Number = (1e15 / mwC) * (mATM / massATM) * 1e6;
+     var logger:ILogger = Log.getLogger("mx.core.Application");
+     
+     for (var i:Number = begYear; i <= maxYear; i++) {
+
+	 	// only graph every 20 years, starting with 2020
+        // we do this so there are a reasonable number of grab-points
+        // (too many, and the user cannot easily alter the plotted data)
+        if (i > begYear) {
+        	if (! ((i % 20) == 0)) {
+            	continue;
+            }
+        }
+
+        var curObject:Object = new Object();
+        curObject.year = i;
+		
+		// two types of reset - default trends or flat trends
+        if (defaultTrending) {
+     		curObject.fossilfuel = Math.round(((i * ffD) + ffE) * 100) / 100;
+	 		curObject.landuse = Math.round(((i * luD) + luE) * 100) / 100;
+     		curObject.oceanuptake = Math.round(((i * ouD) + ouE) * 100) / 100;
+        	curObject.terrestrialuptake = Math.round(((i * tuD) + tuE) * 100) / 100;
+        } else {
+     		curObject.fossilfuel = Math.round(((begYear * ffD) + ffE) * 100) / 100;
+	 		curObject.landuse = Math.round(((begYear * luD) + luE) * 100) / 100;
+     		curObject.oceanuptake = Math.round(((begYear * ouD) + ouE) * 100) / 100;
+        	curObject.terrestrialuptake = Math.round(((begYear * tuD) + tuE) * 100) / 100;
+        }
+
+     	logger.debug("curObject.year: " + curObject.year);
+
+     	// Add new object to the ArrayCollection, which is bound 
+     	// to the chart's 2nd series for each line segment.
+     	myAC.addItem(curObject);
+
+     }
+     
+     // start with Mauna Loa 1959 numbers and populate actual chart, PPM
+     var prevPPM:Number = ml1959;
+     var index:int = 0;
+     for (var y:Number = 1959; y <= 2016; y++) {
+        var o:Object = new Object();
+        var aInc:Number = results.data[index].atmosphericincrease;
+        o.year = y;
+        o.aco2 = Math.round((prevPPM + (aInc * convPgCtoPPM)) * 100) / 100;
+        prevPPM = o.aco2;
+        co2AC.addItem(o);
+        results.data[index].fossilfuel = Math.round(results.data[index].fossilfuel * 100) / 100;
+        index++;
+     }
+
+  }
+
+  ]]></mx:Script>
+
+	  <!-- 1st main panel is overlayed interactive charts, button selectable. -->
+	  <mx:Panel id="interactivePanel" title="Sources and Sinks in PgC/yr, actual and projected" width="330" borderThickness="4">
+	     <cmp:InteractiveChart id="newChart" showDataTips="true" dataTipMode="single" explicitHeight="310" explicitWidth="310">
+	        <cmp:horizontalAxis>
+	           	<mx:LinearAxis id="bottomaxisleftchart" minimum="1940" maximum="2105" interval="40" title="Year"/>
+	        </cmp:horizontalAxis>
+			<cmp:verticalAxis>
+				<mx:LinearAxis id="leftaxisleftchart" minimum="-10" maximum="35" interval="5" title="PgC/yr"/>
+			</cmp:verticalAxis>
+			<cmp:verticalAxisRenderer>
+			  <mx:AxisRenderer verticalAxisTitleAlignment="vertical">
+			  </mx:AxisRenderer>
+			</cmp:verticalAxisRenderer>
+	        <cmp:seriesFilters>
+	           	<mx:Array/>
+	        </cmp:seriesFilters>
+	        <cmp:series>
+	           <mx:LineSeries dataProvider="{results.data}" xField="year" yField="fossilfuel" 
+	                          displayName="Fossil Fuels, Actual (1960 - 2016)">
+	            <mx:lineStroke>
+	                <mx:Stroke color="0xE47801" weight="2" alpha="1"></mx:Stroke>
+	            </mx:lineStroke>
+	           </mx:LineSeries>
+	           <mx:LineSeries dataProvider="{results.data}" xField="year" yField="landuse" 
+	                          displayName="Land Use, Actual (1960 - 2016)">
+	            <mx:lineStroke>
+	                <mx:Stroke color="0xE47801" weight="2" alpha=".35"></mx:Stroke>
+	            </mx:lineStroke>
+	           </mx:LineSeries>
+	           <mx:LineSeries dataProvider="{results.data}" xField="year" yField="oceanuptake" 
+	                          displayName="Ocean Uptake, Actual (1960 - 2016)">
+	            <mx:lineStroke>
+	                <mx:Stroke color="0xE47801" weight="2" alpha=".35"></mx:Stroke>
+	            </mx:lineStroke>
+	           </mx:LineSeries>
+	           <mx:LineSeries dataProvider="{results.data}" xField="year" yField="terrestrialuptake" 
+	                          displayName="Land Uptake, Actual (1960 - 2016)">
+	            <mx:lineStroke>
+	                <mx:Stroke color="0xE47801" weight="2" alpha=".35"></mx:Stroke>
+	            </mx:lineStroke>
+	           </mx:LineSeries>
+	           <cmp:EditableLineSeries dataProvider="{myAC}" xField="year" yField="fossilfuel" itemRenderer="mx.charts.renderers.DiamondItemRenderer"
+	                                   displayName="Fossil Fuels, Projected (2017 - 2100)">
+	              <cmp:lineStroke><mx:Stroke color="0xA5BC4E" weight="2" alpha="1"></mx:Stroke></cmp:lineStroke>
+				  <cmp:stroke><mx:Stroke color="0xA5BC4E" weight="2" alpha="1"></mx:Stroke></cmp:stroke>
+				  <cmp:fill><mx:SolidColor color="0xFFFFFF"></mx:SolidColor></cmp:fill>
+	           </cmp:EditableLineSeries>
+	           <cmp:EditableLineSeries dataProvider="{myAC}" xField="year" yField="landuse"
+	                                   displayName="Land Use, Projected (2017 - 2100)">
+	              <cmp:lineStroke><mx:Stroke color="0xA5BC4E" weight="2" alpha=".35"></mx:Stroke></cmp:lineStroke>
+				  <cmp:stroke><mx:Stroke color="0xA5BC4E" weight="2" alpha="1"></mx:Stroke></cmp:stroke>
+	           </cmp:EditableLineSeries>
+	           <cmp:EditableLineSeries dataProvider="{myAC}" xField="year" yField="oceanuptake"
+	                                   displayName="Ocean Uptake, Projected (2017 - 2100)">
+	              <cmp:lineStroke><mx:Stroke color="0xA5BC4E" weight="2" alpha=".35"></mx:Stroke></cmp:lineStroke>
+				  <cmp:stroke><mx:Stroke color="0xA5BC4E" weight="2" alpha="1"></mx:Stroke></cmp:stroke>
+	           </cmp:EditableLineSeries>
+	           <cmp:EditableLineSeries dataProvider="{myAC}" xField="year" yField="terrestrialuptake"
+	                                   displayName="Land Uptake, Projected (2017 - 2100)">
+	              <cmp:lineStroke><mx:Stroke color="0xA5BC4E" weight="2" alpha=".35"></mx:Stroke></cmp:lineStroke>
+				  <cmp:stroke><mx:Stroke color="0xA5BC4E" weight="2" alpha="1"></mx:Stroke></cmp:stroke>
+	           </cmp:EditableLineSeries>
+
+				<!-- delta-time marked with vertical line -->
+				<mx:LineSeries dataProvider="{yearLeftAC}" xField="year" yField="carbon" 
+                               displayName="Carbon">
+	            	<mx:lineStroke>
+	                	<mx:Stroke color="0x000000" weight="1" alpha="1"></mx:Stroke>
+	            	</mx:lineStroke>
+				</mx:LineSeries>
+
+				<!-- IPCC Fans -->
+				<mx:AreaSeries id="ffas" dataProvider="{ipccfandata.ffFan}" xField="year" yField="maxff"
+							   minField="minff" displayName="IPCC Estimated Range"
+							   toolTip="IPCC Estimated Range" interactive="false" visible="true">
+					<mx:areaFill>
+  						<mx:SolidColor color="0x7EAEFF" alpha=".25" />
+  					</mx:areaFill>
+				</mx:AreaSeries>
+				<mx:AreaSeries id="luas" dataProvider="{ipccfandata.luFan}" xField="year" yField="maxlu"
+							   minField="minlu" displayName="IPCC Estimated Range"
+							   toolTip="IPCC Estimated Range" interactive="false" visible="false">
+					<mx:areaFill>
+  						<mx:SolidColor color="0x7EAEFF" alpha=".25" />
+  					</mx:areaFill>
+				</mx:AreaSeries>
+				<mx:AreaSeries id="ouas" dataProvider="{ipccfandata.ouFan}" xField="year" yField="maxou"
+							   minField="minou" displayName="IPCC Estimated Range" 
+							   toolTip="IPCC Estimated Range" interactive="false" visible="false">
+					<mx:areaFill>
+  						<mx:SolidColor color="0x7EAEFF" alpha=".25" />
+  					</mx:areaFill>
+				</mx:AreaSeries>
+				<mx:AreaSeries id="tuas" dataProvider="{ipccfandata.tuFan}" xField="year" yField="maxtu"
+							   minField="mintu" displayName="IPCC Estimated Range" 
+							   toolTip="IPCC Estimated Range" interactive="false" visible="false">
+					<mx:areaFill>
+  						<mx:SolidColor color="0x7EAEFF" alpha=".25" />
+  					</mx:areaFill>
+				</mx:AreaSeries>
+
+	        </cmp:series>
+
+	     </cmp:InteractiveChart>   
+	
+	  </mx:Panel>
+
+
+  <!-- the control panel -->
+  <mx:VBox horizontalAlign="center" verticalAlign="middle"> 
+   <mx:Spacer height="30"/>
+   <mx:Panel id="sourcesPanel" xmlns:mx="http://www.adobe.com/2006/mxml" title="Sources" layout="horizontal"
+             borderThickness="2" width="{sinksPanel.width}" 
+             dropShadowEnabled="false" cornerRadius="0" borderColor="0xB7BABC" borderStyle="solid">
+    <mx:Button id="b1" label="Fossil Fuels" click="changeToFF()" /> 
+	<mx:Button id="b2" label="Land Use" click="changeToLU()" />
+   </mx:Panel>
+   <mx:Panel id="sinksPanel" xmlns:mx="http://www.adobe.com/2006/mxml" title="Sinks" layout="horizontal"
+             borderThickness="2"
+             dropShadowEnabled="false" cornerRadius="0" borderColor="0xB7BABC" borderStyle="solid">
+	<mx:Button id="b3" label="Ocean Uptake" click="changeToOU()" />
+    <mx:Button id="b4" label="Land Uptake" click="changeToTU()" />
+   </mx:Panel>
+   <mx:Spacer height="15"/>
+   <mx:Panel id="controlsPanel" xmlns:mx="http://www.adobe.com/2006/mxml" title="Controls" layout="vertical"
+             borderThickness="2" width="{sinksPanel.width}" 
+             dropShadowEnabled="false" cornerRadius="0" borderColor="0xB7BABC" borderStyle="solid">
+
+	<mx:HBox>
+		<mx:Button id="b5" label="Reset" click="reset(true)" />
+		<mx:Button id="b6" label="Run Projection" click="run()" />
+	</mx:HBox>
+
+	<mx:HBox>
+		<mx:Label text="Temperature units: " />
+		<mx:RadioButtonGroup id="tempunits" itemClick="changeAxis(event);"/>
+		<mx:RadioButton groupName="tempunits" id="degreesF" value="F" label="&#0176;F" selected="true" />
+		<mx:RadioButton groupName="tempunits" id="degreesC" value="C" label="&#0176;C" />
+	</mx:HBox>
+   </mx:Panel>
+   <mx:Spacer height="5"/>
+   <mx:HBox horizontalAlign="center" paddingTop="0" paddingBottom="0" paddingLeft="0" paddingRight="0">
+	 <mx:Button id="help" label="Help" click="Alert.show('
+          You can\'t change the past \u0028orange is historical data\u0029, but with this application, you can determine what atmospheric CO2 will be in the future! Click on the dots to move the green projection lines in order to set each source and sink into the future! \n\n
+           Switch between each source and sink with the center buttons and \u0022Reset\u0022 to return to default.  Click \u0022Run Projection\u0022 to let it go. \n\n
+           Your last projection will remain in the background for the purpose of comparison. \n\n
+           Scroll over the line graphs on either side for exact values. \n
+          ', 
+         'How much CO2 will the atmosphere contain?');" />
+	 <mx:Button id="edgcm" label="EdGCM" click="saveForEdGCM()" />
+   </mx:HBox>
+  </mx:VBox>
+
+    <!-- here is the projected CO2 chart panel. -->
+    <mx:Panel title="Atmospheric CO2, actual and projected" id="subPanel" width="330" borderThickness="4">
+ 		<mx:AreaChart id="co2Chart" showDataTips="true" explicitHeight="310" explicitWidth="310" type="overlaid">
+    		<mx:horizontalAxis>
+       			<mx:LinearAxis id="bottomaxisrightchart" minimum="1940" maximum="2105" interval="40" title="Year"/>
+   		 	</mx:horizontalAxis>
+			<mx:verticalAxis>
+				<mx:LinearAxis id="leftaxisrightchart" minimum="300" maximum="1200" interval="50" title="Atmospheric CO2 (ppm)" />
+			</mx:verticalAxis>
+			<mx:verticalAxisRenderer>
+			  <mx:AxisRenderer verticalAxisTitleAlignment="vertical">
+			  </mx:AxisRenderer>
+			</mx:verticalAxisRenderer>
+
+			<mx:secondVerticalAxis>
+				<mx:LinearAxis id="tempaxisrightchart" minimum="-0.894" maximum="10.684" interval="1" title="Global Temperature Change (&#0176;F)" />
+			</mx:secondVerticalAxis>
+			<mx:secondVerticalAxisRenderer>
+			  <mx:AxisRenderer verticalAxisTitleAlignment="vertical">
+			  </mx:AxisRenderer>
+			</mx:secondVerticalAxisRenderer>
+
+    		<mx:seriesFilters>
+       			<mx:Array/>
+    		</mx:seriesFilters>
+    		<mx:series>
+       			<mx:LineSeries dataProvider="{co2AC}" xField="year" yField="aco2" 
+                               displayName="Atmospheric CO2">
+	            	<mx:lineStroke>
+	                	<mx:Stroke color="0xE47801" weight="2" alpha="1"></mx:Stroke>
+	            	</mx:lineStroke>
+				</mx:LineSeries>
+				<mx:LineSeries dataProvider="{pco2AC}" xField="year" yField="paco2" 
+                               displayName="Atmospheric CO2">
+	            	<mx:lineStroke>
+	                	<mx:Stroke color="0xA5BC4E" weight="2" alpha="1"></mx:Stroke>
+	            	</mx:lineStroke>
+				</mx:LineSeries>
+
+				<!-- delta-time marked with vertical line -->
+				<mx:LineSeries dataProvider="{yearRightAC}" xField="year" yField="paco2" 
+                               displayName="Atmospheric CO2">
+	            	<mx:lineStroke>
+	                	<mx:Stroke color="0x000000" weight="1" alpha="1"></mx:Stroke>
+	            	</mx:lineStroke>
+				</mx:LineSeries>
+
+				<!-- IPCC Fan -->
+				
+				<mx:AreaSeries dataProvider="{ipccfandata.aco2Fan}" xField="year" yField="maxaco2"
+							   minField="minaco2" displayName="IPCC Estimated Range" 
+							   toolTip="IPCC Estimated Range" interactive="false">
+                	<mx:areaFill>
+                    	<mx:SolidColor color="0x7EAEFF" alpha=".25" />
+                	</mx:areaFill>
+				</mx:AreaSeries>
+
+				<mx:LineSeries dataProvider="{oldpco2AC}" xField="year" yField="paco2" 
+                               displayName="Atmospheric CO2, Previous Projection (2017 - 2100)">
+	            	<mx:lineStroke>
+	                	<mx:Stroke color="0xA5BC4E" weight="2" alpha=".5"></mx:Stroke>
+	            	</mx:lineStroke>
+				</mx:LineSeries>
+    		</mx:series>
+ 		</mx:AreaChart>
+        <!-- <mx:Legend dataProvider="{co2Chart}"/> -->
+    </mx:Panel>
+
+  </mx:HBox>
+
+  <!-- the graphics panel -->
+  <mx:VBox horizontalAlign="center">
+    <mx:Panel id="imagePanel" xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute"
+		title="" headerHeight="4" borderThickness="4" backgroundImage="@Embed('../assets/bkgrnd.jpg')"
+		width="908" height="285" creationComplete="initImagePanel()">
+
+		<!-- year and ppm lables, which update during projection runs -->
+		<mx:Label id="yearcounter" text="" />
+		<mx:Label id="ppmcounter" text="" />
+
+		<!-- these buttons are used as a trick to show tooltips over image hot-spot areas -->
+		<mx:Button id="dbff" alpha="0" width="150" height="100" toolTip="Fossil Fuels" mouseOver="makeVisible(event)" mouseOut="makeInvisible(event)" />
+		<mx:Button id="dblu" alpha="0" width="155" height="85" toolTip="Land Use" mouseOver="makeVisible(event)" mouseOut="makeInvisible(event)" />
+		<mx:Button id="dbou" alpha="0" width="222" height="50" toolTip="Ocean Uptake" mouseOver="makeVisible(event)" mouseOut="makeInvisible(event)" />
+		<mx:Button id="dbtu" alpha="0" width="200" height="80" toolTip="Land Uptake" mouseOver="makeVisible(event)" mouseOut="makeInvisible(event)" />
+  		<!-- the various dynamic graphics components -->
+  		<mx:Image id="trees1" source="@Embed('../assets/trees/small_clump.gif')"></mx:Image>
+		<mx:Image id="trees2" source="@Embed('../assets/trees/clump_big.gif')"></mx:Image>
+		<mx:Image id="trees4" source="@Embed('../assets/trees/clump3.gif')"></mx:Image>
+		<mx:Image id="trees5" source="@Embed('../assets/trees/dec_tree1.gif')"></mx:Image>
+		<mx:Image id="trees6" source="@Embed('../assets/trees/dec_tree2.gif')"></mx:Image>
+		<mx:Image id="trees7" source="@Embed('../assets/trees/decid_clump1.gif')"></mx:Image>
+		<mx:Image id="trees8" source="@Embed('../assets/trees/decid_clump2.gif')"></mx:Image>
+        <!-- the next four tree images are tied to land use and appear/disappear -->
+        <mx:Image id="trees10" source="@Embed('../assets/trees/small_clump.gif')"></mx:Image>
+        <mx:Image id="trees11" source="@Embed('../assets/trees/tree1.gif')"></mx:Image>
+        <mx:Image id="trees12" source="@Embed('../assets/trees/tree2.gif')"></mx:Image>
+        <mx:Image id="factory" source="@Embed('../assets/bldgs/bldgs.gif')"></mx:Image>
+		<mx:Image id="smoke1" source="@Embed('../assets/smokes/smoke1.gif')"></mx:Image>
+        <mx:Image id="smoke2" source="@Embed('../assets/smokes/smoke5.gif')"></mx:Image>
+        <mx:Image id="smoke3" source="@Embed('../assets/smokes/smoke3.gif')"></mx:Image>
+        <mx:Image id="smoke4" source="@Embed('../assets/smokes/smoke4.gif')"></mx:Image>
+        <mx:Image id="arrow1" source="@Embed('../assets/arrows/arrow4.gif')"></mx:Image>
+        <mx:Image id="arrow2" source="@Embed('../assets/arrows/arrow4.gif')"></mx:Image>
+        <mx:Image id="arrow3" source="@Embed('../assets/arrows/arrow4.gif')"></mx:Image>
+        <mx:Image id="fire1" source="@Embed('../assets/fires/fire1.gif')"></mx:Image>
+        <mx:Image id="fire2" source="@Embed('../assets/fires/fire2.gif')"></mx:Image>
+        <mx:Image id="fire3" source="@Embed('../assets/fires/fire1.gif')"></mx:Image>
+	</mx:Panel>
+
+  </mx:VBox>
+
+</mx:Application>

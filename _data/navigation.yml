@@ -1,0 +1,16 @@
+# Site navigation links
+
+
+- title: Applet
+  url: /applet/
+  excerpt:
+  image:
+
+- title: links
+  url: /links/
+
+- title: For Educators
+  url: /educators/
+
+- title: Contact
+  url: /about/

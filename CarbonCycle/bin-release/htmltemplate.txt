@@ -1,0 +1,21 @@
+<style type="text/css">
+h3 {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #000000;
+}
+p {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #000000;
+}
+</style>
+
+<center>
+	<h3>The Global Carbon Budget: 1960 to 2100</h3>
+	<p>
+		Project CO<sub>2</sub> sources and sinks by dragging the green points on the left graph. Hit Run Projection
+		for the impact on atmospheric CO<sub>2</sub> (right graph) and the relative fluxes (bottom graphic).
+	</p>
+</center>
