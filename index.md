@@ -68,7 +68,7 @@ published: true
 <p style="font-size:60%;"> <i> IPCC AR4 (2007) Fig 7.3. The global carbon cycle for the 1990s, showing the main annual fluxes in GtC yr –1 : pre-industrial ‘natural’ fluxes in black and ‘anthropogenic’ fluxes in red (modified from Sarmiento and Gruber, 2006, with changes in pool sizes from Sabine et al., 2004a). The net terrestrial loss of –39 GtC is inferred from cumulative fossil fuel emissions minus atmospheric increase minus ocean storage. The loss of –140 GtC from the ‘vegetation, soil and detritus’ compartment represents the cumulative emissions from land use change (Houghton, 2003), and requires a terrestrial biosphere sink of 101 GtC (in Sabine et al., given only as ranges of –140 to –80 GtC and 61 to 141 GtC, respectively; other uncertainties given in their Table 1). Net anthropogenic exchanges with the atmosphere are from Column 5 ‘AR4’ in Table 7.1. Gross fluxes generally have uncertainties of more than ±20% but fractional amounts have been retained to achieve overall balance when including estimates in fractions of GtC yr–1 for riverine transport, weathering, deep ocean burial, etc. ‘GPP’ is annual gross (terrestrial) primary production. Atmospheric carbon content and all cumulative fluxes since 1750 are as of end 1994. </i> </p>
 
 
-<h5> <a href="{{site.baseurl}}/links" target = "blank"> References</a> </h5>
+<h5> <a href="{{site.baseurl}}/references/" target = "blank"> <u> References </u> </a> </h5>
 
 
 <a name="Atmosphere"> </a>
@@ -120,8 +120,7 @@ You can find information about the emissions from the developed world (so-called
 
 <p> The future of anthropogenic fossil fuel use depends on human decisions about energy use at the international scale. If we collectively choose to depend more and more on fossil fuels, our emissions will increase. If we choose to focus on efficiency and renewable energy sources, our emissions will not increase so quickly or even stabilize or decline. These are difficult choices with potentially dramatic implications for economies, politics, environment, and society from the local to the global scale. These issues are the focus of the activities under the <a href="https://cop23.unfccc.int/"> United Nations Framework Convention on Climate Change </a> with the most significant recent development being the 2015 Paris Agreement. Current activities focus on the implementation of this plan. </p>
 
-<h5> <a href="{{site.baseurl}}/links" target = "blank"> References</a> </h5>
-
+<h5> <a href="{{site.baseurl}}/references/" target = "blank"> <u> References </u> </a> </h5>
 
 <a name="OceanUptake"> </a>
 <div class="page-lead" style="background-image:url({{ site.url }}/images/{{ page.image.ocean }})">
@@ -163,7 +162,7 @@ In the US, the Ocean Carbon and Biogeochemistry (OCB https://www.us-ocb.org/) pr
 Here is a <a href="https://www.nrdc.org/stories/what-you-need-know-about-ocean-acidification"> video </a> from National Resources Defense Council on ocean acidification. For more detail, see these pages from <a href="http://oceanacidification.noaa.gov/Home.aspx"> NOAA </a> and the <a href="http://www.whoi.edu/main/topic/ocean-acidification"> Woods Hole Oceanographic Institution</a>.
 </p>
 
-<h5> <a href="{{site.baseurl}}/links" target = "blank"> References</a> </h5>
+<h5> <a href="{{site.baseurl}}/references/" target = "blank"> <u> References </u> </a> </h5>
 
 <a name="LandUse"> </a>
 <div class="page-lead" style="background-image:url({{ site.url }}/images/{{ page.image.land }})">
@@ -187,8 +186,7 @@ Uncertainty in estimates of the land use source are large in part because estima
 
 <p> These terms are separated to clarify the direct impact of humans in forest clearing and subsequent regrowth (Land Use), and the natural system’s response to anthropogenic addition of carbon to the atmosphere and climate warming (Land Uptake). In many studies, however, it is impractical to precisely distinguish between these two terms and so often some component of the Land Use term (such as afforestation in the mid-latitudes) is effectively subsumed into the Land Uptake term. </p>
 
-<h5> <a href="{{site.baseurl}}/links" target = "blank"> References</a> </h5>
-
+<h5> <a href="{{site.baseurl}}/references/" target = "blank"> <u> References </u> </a> </h5>
 
 <a name="LandUptake"> </a>
 <div class="page-lead" style="background-image:url({{ site.url }}/images/{{ page.image.land2 }})">
@@ -224,8 +222,7 @@ In addition, the land may become a natural source of carbon to the atmosphere. P
 <p>
 It is very important that we better understand the mechanisms of land uptake. As understanding improves, predictions will be of greater assistance to carbon management decision-making. Improving mechanistic understanding is a central focus of the US-led <a href="www.nacarbon.org"> North American Carbon Program </a> and Europe’s <a href="http://www.carboeurope.org/"> CarboEurope</a>. </p>
 
-<h5> <a href="{{site.baseurl}}/links" target = "blank"> References</a> </h5>
-
+<h5> <a href="{{site.baseurl}}/references/" target = "blank"> <u> References </u> </a> </h5>
 
 
 
