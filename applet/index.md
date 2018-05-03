@@ -15,6 +15,9 @@ Project CO2 sources and sinks by dragging the green points on the left graph.
 <br>
 Hit Run Projection for the impact on atmospheric CO2 (right graph) and the relative fluxes (bottom graphic).
 
+<br>
+As of spring 2018, the applet is still written in Flash, which may not run on all browsers, or may require changes to your security setting. We are working on updating the applet.
+
 </p>
 
 
