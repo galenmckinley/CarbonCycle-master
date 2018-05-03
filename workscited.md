@@ -1,11 +1,10 @@
 ---
 layout: archive
 permalink: /references/
-title: Links
+title: Works Cited and Referenced
 published: true
 ---
 
-## Works Cited and Referenced
 
 #### Carbon Cycle 
 
