@@ -7,7 +7,7 @@ published: true
 
 This carbon cycle education project is led by:
 
-[Professor Galen A. McKinley](http://zentouro.ldeo.columbia.edu/)
+[Professor Galen A. McKinley](http://mckinley.ldeo.columbia.edu/)
 Columbia University 
 Department of Earth and Environmental Sciences
 and 
