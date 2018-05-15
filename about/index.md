@@ -8,15 +8,15 @@ published: true
 This carbon cycle education project is led by:
 
 [Professor Galen A. McKinley](http://mckinley.ldeo.columbia.edu/)
-
+<br>
 Columbia University 
-
-Department of Earth and Environmental Sciences
-
-and 
-Lamont Doherty Earth Observatory
-
-New York, USA
+<br>
+Department of Earth and Environmental Sciences 
+<br>
+and
+Lamont Doherty Earth Observatory 
+<br>
+New York, USA 
 
 email: mckinley at ldeo.columbia.edu
 
