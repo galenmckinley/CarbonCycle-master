@@ -11,6 +11,7 @@ published: true
 - [The global carbon cycle, from the Woods Hole Oceanographic Institution](http://www.whoi.edu/feature/carboncycle/)
 - [Carbon Connections](http://carbonconnections.bscs.org/) – online curriculum for 9-12 students
 - [NASA Earth Observatory](http://earthobservatory.nasa.gov/Features/CarbonCycle/) (Carbon Cycle Background)
+- [Global Carbon Atlas](http://www.globalcarbonatlas.org/en/content/welcome-carbon-atlas) (Explore carbon cycle data, with focus on emissions)
 
 ## Climate and Climate Change Resources
 
