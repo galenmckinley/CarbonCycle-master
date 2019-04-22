@@ -1,0 +1,60 @@
+/* dark color scheme */
+body {
+  background-color: rgb(40, 44, 52);
+  color: Linen;
+}
+
+.graph {
+  color: Wheat;			/* annotation & axes */
+  background-color: DarkOliveGreen;
+  /* --graph-bg-color: DarkSlateGray; */
+  --graph-bg-color: rgba(0, 0, 0, 0.55);
+  --graph-fg-color: MediumOrchid;	/* graph lines */
+  --graph-active-color: red;
+  /* --graph-spread-color: rgba(25, 25, 112, 0.35);	/\* MidnightBlue *\/ */
+  --graph-spread-color: rgba(0, 0, 205, 0.35);	/* MediumBlue */
+  --graph-proj-color: Red;
+  --graph-proj-active-color: orangered;
+  --graph-proj-select-color: Yellow;
+  --graph-hist-color-0: hsl(245,  0%, 70%);
+  --graph-hist-color-1: hsl(55,  80%, 70%);
+  --graph-hist-color-2: hsl(220, 80%, 70%);
+  --graph-hist-color-3: hsl(110, 80%, 70%);
+  --graph-proj-color-0: hsl(245,  0%, 80%);
+  --graph-proj-color-1: hsl(55,  80%, 80%);
+  --graph-proj-color-2: hsl(220, 80%, 80%);
+  --graph-proj-color-3: hsl(110, 80%, 80%);
+}
+
+.btn-stack button {
+  /* background-color: rgb(57, 62, 70); */
+  background-color: hsl(217, 10%, 25%);
+  color: White;
+}
+
+.btn-stack button.active {
+  /* background-color: rgb(57, 62, 70); */
+  background-color: hsl(217, 10%, 45%);
+  border-style: inset;
+}
+
+input {
+  background-color: rgb(60, 66, 74);
+  color: White;
+}
+
+div.tooltip {
+  background: hsl(200, 10%, 30%);
+  color: white;
+}
+
+/* link colors */
+a:link {
+  color: LightBlue;
+}
+a:visited {
+  color: Plum;
+}
+a:active {
+  color: Gold;
+}

@@ -1,0 +1,97 @@
+<html>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Applet • Carbon and Climate</title>
+  <head>
+    <link rel="stylesheet" type="text/css" href="carboncycle.css">
+    <link rel="stylesheet" type="text/css" href="carboncycle-light.css"
+	  title="Light">
+    <link rel="alternate stylesheet" type="text/css"
+	  href="carboncycle-dark.css" title="Dark">
+    <script src="carboncycle.js"></script>
+  </head>
+  <body>
+    <h1 class="center">The Global Carbon Budget: 1960 to 2100</h1>
+    <p>
+      Project CO<sub>2</sub> sources and sinks by dragging the red
+      points on the left graph.
+    </p>
+    <input id="btn-style" type="button" onclick="switch_style ()"
+	   class="button" value="Dark Mode" title="Switch Style">
+    <input id="btn-reset" type="button" onclick="handle_btn_reset ()"
+	   class="button" value="Reset All" title="Reset Simulation">
+    <div class="col-12 col-m-12">
+      <div class="col-6 col-m-6">
+	<div id="in-div" class="graphdiv">
+	  <canvas id="in-graph" class="graph">
+	    Input graph goes here
+	  </canvas>
+	  <div id="in-btn-div" class="btn-stack">
+	    <button id="btn-src-ff" class="button active"
+		    type="button" disabled
+		    title="Fossil Fuels">Fossil Fuels</button>
+	    <button id="btn-src-lu" class="button" type="button"
+		    title="Land Use">Land Use</button>
+	    <button id="btn-snk-ou" class="button" type="button"
+		    title="Ocean Uptake">Ocean Uptake</button>
+	    <button id="btn-snk-lu" class="button" type="button"
+		    title="Land Uptake">Land Uptake</button>
+	  </div>
+	  <div id="in-tooltip" class="mouse tooltip">
+	    Input Coord<br>year: ppm
+	  </div>
+	</div>
+      </div>
+      <div class="col-6 col-m-6">
+	<div id="out-div" class="graphdiv">
+	  <canvas id="out-graph" class="graph">
+	    Output graph goes here
+	  </canvas>
+	  <div id="out-btn-div" class="btn-stack">
+	    <button id="btn-run" class="button"
+		    title="Run Projection">Run</button>
+	    <button id="btn-units" class="button"
+		    title="F / C">Units</button>
+	  </div>
+	  <div id="out-tooltip" class="mouse tooltip">
+	    Output Coord<br>year: ppm
+	  </div>
+	</div>
+      </div>
+    </div>
+    <script src="carboncycle.js"></script>
+    <script>
+      init ();
+    </script>
+    <div class="col-12" "col-m-12">
+      <h3>Important Notes:</h3>
+      <ol>
+	<li>
+	  The blue shaded areas mark predicted ranges from the global climate
+          models used in the Intergovernmental Panel on Climate Change,
+          Fourth Assessement Report (<a href="https://www.ipcc.ch/report/ar4/syr/">IPCC AR4, 2007</a>).
+	</li>
+	<li>
+	  The estimated global temperature response is a rough scaling
+	  based upon average IPCC AR4 (2007) model sensitivity to
+	  atmospheric CO<sub>2</sub>.  It is for illustrative purposes
+	  only.
+	</li>
+	<li>
+	  Output of atmospheric CO<sub>2</sub> for input to the EdGCM
+	  (<a href="http://edgcm.columbia.edu">Educational Global Climate Model</a>)
+	  can be obtained by clicking on the EdGCM button.  Place this
+	  file in the file EdGCM / Input Forcings on your computer and
+	  you will then see the file under Setup Simulations - CO<sub>2</sub> Trend
+	  - data file one you start EdGCM.  This functionality has been
+	  tested to work on Chrome and Firefox.
+	</li>
+	<!-- <li> -->
+	<!--   Testing link to nowhere: <a href="example.com">example link</a>. -->
+	<!--   Should always be "unvisited" so all link colors are shown on -->
+	<!--   the page. -->
+	<!-- </li> -->
+      </ol>
+    </div>
+  </body>
+</html>

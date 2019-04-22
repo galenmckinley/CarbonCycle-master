@@ -1,0 +1,52 @@
+/* dark color scheme */
+body {
+  background-color: rgb(40, 44, 52);
+  color: Linen;
+}
+
+.graph {
+  color: Wheat;			/* annotation & axes */
+  background-color: DarkOliveGreen;
+  /* --graph-bg-color: DarkSlateGray; */
+  --graph-bg-color: rgba(0, 0, 0, 0.55);
+  --graph-fg-color: MediumOrchid;	/* graph lines */
+  --graph-active-color: Magenta;
+  /* --graph-spread-color: rgba(25, 25, 112, 0.35);	/\* MidnightBlue *\/ */
+  --graph-spread-color: rgba(0, 0, 205, 0.35);	/* MediumBlue */
+  --graph-proj-color: GreenYellow;
+  --graph-proj-active-color: Lime;
+  --graph-proj-select-color: Yellow;
+}
+
+.btn-stack button {
+  /* background-color: rgb(57, 62, 70); */
+  background-color: hsl(217, 10%, 25%);
+  color: White;
+}
+
+.btn-stack button.active {
+  /* background-color: rgb(57, 62, 70); */
+  background-color: hsl(217, 10%, 45%);
+  border-style: inset;
+}
+
+input {
+  background-color: rgb(60, 66, 74);
+  color: White;
+}
+
+div.tooltip {
+  background: indigo;
+  color: white;
+}
+
+/* link colors */
+a:link {
+  color: LightBlue;
+}
+a:visited {
+  color: Plum;
+}
+a:active {
+  color: Gold;
+}

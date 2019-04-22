@@ -1,0 +1,50 @@
+/* light color scheme */
+body {
+  background-color: Linen;
+  color: Black;
+}
+
+.graph {
+  color: Black;			/* annotation & axes */
+  background-color: cornsilk;
+  /* --graph-bg-color: LightGray; */
+  --graph-bg-color: rgba(255, 255, 255, 0.66);
+  --graph-fg-color: Maroon;	/* graph lines */
+  --graph-active-color: Red;
+  --graph-spread-color: rgba(135, 206, 235, 0.5);	/* SkyBlue */
+  --graph-proj-color: Green;
+  --graph-proj-active-color: DarkGreen;
+  --graph-proj-select-color: Lime;
+}
+
+.btn-stack button {
+  background-color: hsl(60, 54%, 85%);
+  color: Black;
+}
+
+.btn-stack button.active {
+  /* background-color: rgb(57, 62, 70); */
+  background-color: hsl(60, 54%, 95%);
+  border-style: inset;
+}
+
+input {
+  background-color: hsl(60, 54%, 85%);
+  color: Black;
+}
+
+div.tooltip {
+  background: ghostwhite;
+  color: black;
+}
+
+/* link colors */
+a:link {
+  color: Blue;
+}
+a:visited {
+  color: Purple;
+}
+a:active {
+  color: Red;
+}

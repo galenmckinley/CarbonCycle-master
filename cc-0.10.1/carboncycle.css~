@@ -1,0 +1,131 @@
+/* Layout Stylesheet
+ *    Don't put colors here - use the separate "-light" and "-dark"
+ * stylesheets.
+ */
+body {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 100%;		/* specify other font sizes in `em' */
+}
+
+/* link decorations that aren't styled by the "light" or "dark" sheets */
+a {
+  background-color: transparent;
+}
+a:link {
+  text-decoration: none;
+}
+a:visited {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+a:active {
+  text-decoration: underline;
+}
+
+.center {
+  text-align: center;
+}
+
+/* bounding division around the canvas elements for CSS to resize */
+.graphdiv {
+  min-height: 400px;
+  max-height: 600px;
+  position: relative;
+}
+
+/* the graph itself - non-color standard & custom properties */
+.graph {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 0.875em;		/* for labels */
+  /* --graph-min-aspect: 0.5625;	/\* 9 / 16 *\/ */
+  --graph-min-aspect: 0.75;		  /* 3 / 4 */
+  --graph-max-aspect: 1.7777777777777777; /* 16 / 9 */
+  --graph-border: 50;		/* pixels */
+}
+
+.scaleimg {
+  max-width: 100%;
+  height: auto;
+  padding-top: 10px;
+}
+
+.btn-stack {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.btn-stack .button {
+  padding: 2px 2px;
+  text-align: center;
+  cursor: pointer;
+  font-size: 14px;
+  width: 130px;
+  display: block;
+}
+
+.tooltip {
+  pointer-events: none;		/*let mouse events pass through*/
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+div.tooltip {
+  padding: 2px 2px;
+  position: absolute;
+  max-width: 8em;
+  text-align: center;
+}
+
+/* The following is adapted from:
+ *    <https://www.w3schools.com/css/css_rwd_intro.asp>
+ */
+
+/* width & heights include borders */
+* {
+  box-sizing: border-box;
+}
+.row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+[class*="col-"] {
+  float: left;
+}
+/* For mobile phones: */
+[class*="col-"] {
+  width: 100%;
+}
+@media only screen and (min-width: 600px) {
+  /* For tablets: */
+  .col-m-1 {width: 8.33%;}
+  .col-m-2 {width: 16.66%;}
+  .col-m-3 {width: 25%;}
+  .col-m-4 {width: 33.33%;}
+  .col-m-5 {width: 41.66%;}
+  .col-m-6 {width: 50%;}
+  .col-m-7 {width: 58.33%;}
+  .col-m-8 {width: 66.66%;}
+  .col-m-9 {width: 75%;}
+  .col-m-10 {width: 83.33%;}
+  .col-m-11 {width: 91.66%;}
+  .col-m-12 {width: 100%;}
+}
+@media only screen and (min-width: 768px) {
+  /* For desktop: */
+  .col-1 {width: 8.33%;}
+  .col-2 {width: 16.66%;}
+  .col-3 {width: 25%;}
+  .col-4 {width: 33.33%;}
+  .col-5 {width: 41.66%;}
+  .col-6 {width: 50%;}
+  .col-7 {width: 58.33%;}
+  .col-8 {width: 66.66%;}
+  .col-9 {width: 75%;}
+  .col-10 {width: 83.33%;}
+  .col-11 {width: 91.66%;}
+  .col-12 {width: 100%;}
+}
