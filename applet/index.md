@@ -18,7 +18,7 @@ Hit Run Projection for the impact on atmospheric CO2 (right graph).
 </p>
 
 
-<iframe src="http://galenmckinley.github.io/CarbonCycle/CarbonCycle/cc-0.10.1/carboncycle.html" width="950px" height="700px" align="center" frameborder="0px" marginwidth="0px" scrolling="none" border="0px" class="iframe-class"></iframe>
+<iframe src="http://galenmckinley.github.io/CarbonCycle/cc-0.10.1/carboncycle.html" width="950px" height="700px" align="center" frameborder="0px" marginwidth="0px" scrolling="none" border="0px" class="iframe-class"></iframe>
 
 </div>
 
