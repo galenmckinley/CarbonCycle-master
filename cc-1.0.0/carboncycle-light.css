@@ -1,0 +1,58 @@
+/* light color scheme */
+body {
+  background-color: White;
+  color: Black;
+}
+
+.graph {
+  color: Black;			/* annotation & axes */
+  background-color: cornsilk;
+  /* --graph-bg-color: LightGray; */
+  --graph-bg-color: rgba(255, 255, 255, 0.66);
+  --graph-fg-color: Maroon;	/* graph lines */
+  --graph-active-color: Red;
+  --graph-spread-color: rgba(135, 206, 235, 0.5);	/* SkyBlue */
+  --graph-proj-color: Green;
+  --graph-proj-active-color: Firebrick;
+  --graph-proj-select-color: Gold;
+  --graph-hist-color-0: hsl(245,  0%, 40%);
+  --graph-hist-color-1: hsl(55,  80%, 35%);
+  --graph-hist-color-2: hsl(200, 80%, 40%);
+  --graph-hist-color-3: hsl(85,  80%, 40%);
+  --graph-proj-color-0: hsl(245,  0%, 25%);
+  --graph-proj-color-1: hsl(55,  80%, 30%);
+  --graph-proj-color-2: hsl(200, 80%, 25%);
+  --graph-proj-color-3: hsl(85,  80%, 30%);
+}
+
+.btn-stack button {
+  background-color: hsl(60, 54%, 85%);
+  color: Black;
+}
+
+.btn-stack button.active {
+  /* background-color: rgb(57, 62, 70); */
+  background-color: hsl(60, 54%, 95%);
+  border-style: inset;
+}
+
+input {
+  background-color: hsl(60, 54%, 85%);
+  color: Black;
+}
+
+div.tooltip {
+  background: ghostwhite;
+  color: black;
+}
+
+/* link colors */
+a:link {
+  color: Blue;
+}
+a:visited {
+  color: Purple;
+}
+a:active {
+  color: Red;
+}
