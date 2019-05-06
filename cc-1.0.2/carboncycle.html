@@ -1,0 +1,62 @@
+<html>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Applet • Carbon and Climate</title>
+  <head>
+    <link rel="stylesheet" type="text/css" href="carboncycle.css">
+    <link rel="stylesheet" type="text/css" href="carboncycle-light.css"
+	  title="Light">
+    <link rel="alternate stylesheet" type="text/css"
+	  href="carboncycle-dark.css" title="Dark">
+    <script src="carboncycle.js"></script>
+  </head>
+  <body>
+    <input id="btn-style" type="button" onclick="switch_style ()"
+	   class="button" value="Dark Mode" title="Switch Style">
+    <input id="btn-reset" type="button" onclick="handle_btn_reset ()"
+	   class="button" value="Reset All" title="Reset Simulation">
+    <div class="col-12 col-m-12">
+      <div class="col-6 col-m-6">
+	<div id="in-div" class="graphdiv">
+	  <canvas id="in-graph" class="graph">
+	    Input graph goes here
+	  </canvas>
+	  <div id="in-btn-div" class="btn-stack">
+	    <button id="btn-src-ff" class="button active"
+		    type="button" disabled
+		    title="Fossil Fuels">Fossil Fuels</button>
+	    <button id="btn-src-lu" class="button" type="button"
+		    title="Land Use">Land Use</button>
+	    <button id="btn-snk-ou" class="button" type="button"
+		    title="Ocean Uptake">Ocean Uptake</button>
+	    <button id="btn-snk-lu" class="button" type="button"
+		    title="Land Uptake">Land Uptake</button>
+	  </div>
+	  <div id="in-tooltip" class="mouse tooltip">
+	    Input Coord<br>year: ppm
+	  </div>
+	</div>
+      </div>
+      <div class="col-6 col-m-6">
+	<div id="out-div" class="graphdiv">
+	  <canvas id="out-graph" class="graph">
+	    Output graph goes here
+	  </canvas>
+	  <div id="out-btn-div" class="btn-stack">
+	    <button id="btn-run" class="button"
+		    title="Run Projection">Run Projection</button>
+	    <button id="btn-units" class="button"
+		    title="Temperature Units">&#176;F / &#176;C</button>
+	  </div>
+	  <div id="out-tooltip" class="mouse tooltip">
+	    Output Coord<br>year: ppm
+	  </div>
+	</div>
+      </div>
+    </div>
+    <script src="carboncycle.js"></script>
+    <script>
+      init ();
+    </script>
+  </body>
+</html>
