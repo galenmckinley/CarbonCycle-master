@@ -9,10 +9,10 @@ Lesson Plans
 
 Below are two lesson plans to accompany this website and that involve student use of the applet. The middle school plan was developed by Jeanine Gelhaus of Medford Middle School in Medford, WI, and the high school plan by Maury Smith of Monona Grove High School in Monona, WI. Both were tested in classroom settings and iteratively refined. Please send comments to Professor McKinley.
 
-<p> <a href="{{ site.url }}/highschool/"> A Global Dilemma </a>  (target group: middle school) </p>
+<p> <a href="{{ site.url }}/middleschool/"> A Global Dilemma </a>  (target group: middle school) </p>
 
 
-<p> <a href="{{ site.url }}/middleschool/"> Mathematical Modeling and Stabilization Wedges </a> (target group: high school ) </p>
+<p> <a href="{{ site.url }}/highschool/"> Mathematical Modeling and Stabilization Wedges </a> (target group: high school ) </p>
 
 <h3> Other Resources </h3>
 
